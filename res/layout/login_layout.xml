@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@drawable/login_bg">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="100dip"
+        android:layout_height="60dip"
+        android:gravity="left|center"
+        android:text="用户名:"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/username_login"
+        android:layout_width="300dip"
+        android:layout_height="60dip"
+        android:layout_toRightOf="@id/textView1">
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="100dip"
+        android:layout_height="60dip"
+        android:layout_alignRight="@id/textView1"
+        android:layout_below="@id/textView1"
+        android:text="密码:"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/password_login"
+        android:layout_width="300dip"
+        android:layout_height="60dip"
+        android:layout_alignLeft="@id/username_login"
+        android:layout_below="@id/username_login"
+        android:inputType="textPassword" />
+
+    <CheckBox
+        android:id="@+id/rememberPassword_login"
+        android:layout_width="150dip"
+        android:layout_height="60dip"
+        android:layout_alignLeft="@id/password_login"
+        android:layout_below="@id/password_login"
+        android:text="记住密码" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="150dip"
+        android:layout_height="60dip"
+        android:layout_alignRight="@id/password_login"
+        android:layout_below="@id/password_login"
+        android:text="登陆" />
+
+</RelativeLayout>
