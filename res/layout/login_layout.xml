@@ -3,8 +3,7 @@
     android:id="@+id/relativeLayout1"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:background="@drawable/login_bg">
+    android:gravity="center">
 
     <TextView
         android:id="@+id/textView1"

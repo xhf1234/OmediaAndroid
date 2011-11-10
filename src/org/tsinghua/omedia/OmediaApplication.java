@@ -12,10 +12,6 @@ import android.content.res.Configuration;
  */
 public class OmediaApplication extends Application {
     private static OmediaApplication omedia;
-    //singleton
-    private OmediaApplication() {
-        
-    }
     
     public static OmediaApplication getInstance() {
         return omedia;
