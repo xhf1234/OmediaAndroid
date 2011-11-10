@@ -1,4 +1,4 @@
-package org.tsinghua.omedia.fragment;
+package org.tsinghua.omedia.ui;
 
 import org.tsinghua.omedia.R;
 
