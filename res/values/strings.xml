@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World!</string>
     <string name="app_name">Omedia</string>
+    <string name="alert_dialog_ok">确定</string>
+    <string name="login_auth_failed">用户名或密码错误</string>
 </resources>

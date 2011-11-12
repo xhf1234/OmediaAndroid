@@ -19,7 +19,7 @@ public class Logger {
     }
     
     public void info(String msg) {
-        Log.i(msg, msg);
+        Log.i(tag, msg);
     }
     
     public void warn(String msg) {

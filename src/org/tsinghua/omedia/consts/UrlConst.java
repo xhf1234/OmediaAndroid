@@ -9,7 +9,7 @@ public interface UrlConst {
 
     public static final String BaseUrl = "http://"
             + OmediaConst.OmediaServerAddr+":"
-            + OmediaConst.OmediaServerPort+"/";
+            + OmediaConst.OmediaServerPort+"/omedia/";
     
     public static final String LoginUrl = BaseUrl+"login.do";
 }

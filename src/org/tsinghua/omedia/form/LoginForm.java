@@ -1,5 +1,9 @@
 package org.tsinghua.omedia.form;
 
+import org.tsinghua.omedia.annotation.AlphaOrNumber;
+import org.tsinghua.omedia.annotation.NotEmpty;
+import org.tsinghua.omedia.annotation.Size;
+
 
 /**
  * 
@@ -7,15 +11,17 @@ package org.tsinghua.omedia.form;
  *
  */
 public class LoginForm extends AbstractForm {
+    @NotEmpty(msg="用户名不能为空")
+    @Size(min=4,minMsg="用户名不能少于4位",max=32,maxMsg="用户名不能超过32位")
+    @AlphaOrNumber(msg="用户名必须由字母或数字组成")
     private String username;
+    
+    @NotEmpty(msg="密码不能为空")
+    @Size(min=6,minMsg="密码不能少于6位",max=32,maxMsg="密码不能超过32位")
+    @AlphaOrNumber(msg="密码必须由字母或数字组成")
     private String password;
+    
     private boolean rememberPassword;
-
-    @Override
-    public String validate() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     public String getUsername() {
         return username;

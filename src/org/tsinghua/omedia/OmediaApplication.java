@@ -1,5 +1,7 @@
 package org.tsinghua.omedia;
 
+import org.tsinghua.omedia.service.HttpService;
+
 import android.app.Application;
 import android.content.res.Configuration;
 
@@ -12,6 +14,8 @@ import android.content.res.Configuration;
  */
 public class OmediaApplication extends Application {
     private static OmediaApplication omedia;
+    
+    private HttpService httpService = new HttpService();
     
     public static OmediaApplication getInstance() {
         return omedia;
@@ -36,5 +40,13 @@ public class OmediaApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+    }
+
+    public HttpService getHttpService() {
+        return httpService;
+    }
+
+    public void setHttpService(HttpService httpService) {
+        this.httpService = httpService;
     }
 }
