@@ -1,4 +1,4 @@
-package org.tsinghua.omedia.annotation;
+package org.tsinghua.omedia.annotation.validate;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,6 +12,9 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface NotEmpty {
-    String msg() default "can not be empty";
+public @interface Size {
+    int min() default 0;
+    String minMsg() default "too short";
+    int max() default Integer.MAX_VALUE;
+    String maxMsg() default "too long";
 }

@@ -1,7 +1,12 @@
 package org.tsinghua.omedia.datasource;
 
+
 /**
  * 数据源 封装一下存取数据的对象和方法
+=======
+
+/**
+ * 
  * @author xuhongfeng
  *
  */
@@ -22,5 +27,9 @@ public class DataSource {
     
     public OmediaPreference getPreference() {
         return OmediaPreference.getInstance();
+    }
+    
+    public MemDataSource getMemDataSource() {
+        return MemDataSource.getInstance();
     }
 }

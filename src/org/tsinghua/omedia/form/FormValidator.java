@@ -3,9 +3,9 @@ package org.tsinghua.omedia.form;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 
-import org.tsinghua.omedia.annotation.AlphaOrNumber;
-import org.tsinghua.omedia.annotation.NotEmpty;
-import org.tsinghua.omedia.annotation.Size;
+import org.tsinghua.omedia.annotation.validate.AlphaOrNumber;
+import org.tsinghua.omedia.annotation.validate.NotEmpty;
+import org.tsinghua.omedia.annotation.validate.Size;
 import org.tsinghua.omedia.tool.Logger;
 
 public class FormValidator {

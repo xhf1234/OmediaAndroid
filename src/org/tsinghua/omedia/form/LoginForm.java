@@ -1,8 +1,8 @@
 package org.tsinghua.omedia.form;
 
-import org.tsinghua.omedia.annotation.AlphaOrNumber;
-import org.tsinghua.omedia.annotation.NotEmpty;
-import org.tsinghua.omedia.annotation.Size;
+import org.tsinghua.omedia.annotation.validate.AlphaOrNumber;
+import org.tsinghua.omedia.annotation.validate.NotEmpty;
+import org.tsinghua.omedia.annotation.validate.Size;
 
 
 /**
