@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.R;
+import org.tsinghua.omedia.datasource.OmediaPreference;
 import org.tsinghua.omedia.form.FormProcessor;
 import org.tsinghua.omedia.form.LoginForm;
 import org.tsinghua.omedia.tool.JsonUtil;
@@ -30,7 +31,22 @@ public class LandingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.landing_layout);
+        initViewsFromPreferences();
         initListener();
+    }
+    
+
+    private void initViewsFromPreferences() {
+        OmediaPreference preferences = OmediaApplication.getInstance()
+                .getDatasource().getPreference();
+        CheckBox cb = (CheckBox)findViewById(R.id.rememberPassword_login);
+        cb.setChecked(preferences.isRememberPassword());
+        EditText username = (EditText)findViewById(R.id.username_login);
+        username.setText(preferences.getUsername());
+        if(preferences.isRememberPassword()) {
+            EditText password = (EditText)findViewById(R.id.password_login);
+            password.setText(preferences.getPassword());
+        }
     }
     
     private void initListener() {
@@ -63,8 +79,7 @@ public class LandingActivity extends BaseActivity {
                     Integer r = (Integer) map.get("result");
                     switch(r) {
                     case LOGIN_AUTH_SUCCESS:
-                        //TODO
-                        showAlertDialog("ok");
+                        loginSuccess();
                         break;
                     case LOGIN_AUTH_FAILED:
                         showAlertDialog(ResourceUtil.getString(R.string.login_auth_failed));
@@ -84,4 +99,17 @@ public class LandingActivity extends BaseActivity {
         }.exec();
     }
 
+    private void loginSuccess() {
+        //update preferences
+        OmediaPreference preferences = dataSource.getPreference();
+        CheckBox cb = (CheckBox)findViewById(R.id.rememberPassword_login);
+        preferences.setRememberPassword(cb.isChecked());
+        EditText username = (EditText)findViewById(R.id.username_login);
+        preferences.setUsername(username.getText().toString());
+        if(preferences.isRememberPassword()) {
+            EditText password = (EditText)findViewById(R.id.password_login);
+            preferences.setPassword(password.getText().toString());
+        }
+        //TODO
+    }
 }
