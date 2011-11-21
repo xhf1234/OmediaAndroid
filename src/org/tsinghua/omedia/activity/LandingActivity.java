@@ -10,8 +10,10 @@ import org.tsinghua.omedia.datasource.OmediaPreference;
 import org.tsinghua.omedia.form.FormProcessor;
 import org.tsinghua.omedia.form.LoginForm;
 import org.tsinghua.omedia.tool.JsonUtil;
+import org.tsinghua.omedia.tool.Logger;
 import org.tsinghua.omedia.tool.ResourceUtil;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,11 +28,13 @@ import android.widget.EditText;
 public class LandingActivity extends BaseActivity {
     private static final int LOGIN_AUTH_SUCCESS = 1;
     private static final int LOGIN_AUTH_FAILED = 2;
+    
+    private static final Logger logger = Logger.getLogger(LandingActivity.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.landing_layout);
+        setContentView(R.layout.landing_activity);
         initViewsFromPreferences();
         initListener();
     }
@@ -98,7 +102,7 @@ public class LandingActivity extends BaseActivity {
             }
         }.exec();
     }
-
+    
     private void loginSuccess() {
         //update preferences
         OmediaPreference preferences = dataSource.getPreference();
@@ -110,6 +114,8 @@ public class LandingActivity extends BaseActivity {
             EditText password = (EditText)findViewById(R.id.password_login);
             preferences.setPassword(password.getText().toString());
         }
-        //TODO
+        logger.debug("intent to MainActivity");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

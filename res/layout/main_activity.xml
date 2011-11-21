@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:layout_margin="50dip"
+    android:orientation="vertical">
+
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <FrameLayout android:layout_height="fill_parent"
+            android:layout_width="0dip"
+            android:layout_weight="1">
+            <Button android:text="微博"
+                android:id="@+id/btn_tblog"
+                android:layout_width="100dip"
+                android:layout_height="100dip"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+        <FrameLayout android:layout_height="fill_parent"
+            android:layout_width="0dip"
+            android:layout_weight="1">
+            <Button android:text="好友"
+                android:id="@+id/btn_friends"
+                android:layout_width="100dip"
+                android:layout_height="100dip"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+        <FrameLayout android:layout_height="fill_parent"
+            android:layout_width="0dip"
+            android:layout_weight="1">
+            <Button android:text="消息"
+                android:id="@+id/btn_notice"
+                android:layout_width="100dip"
+                android:layout_height="100dip"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+        <FrameLayout android:layout_height="fill_parent"
+            android:layout_width="0dip"
+            android:layout_weight="1">
+            <Button android:text="设置"
+                android:id="@+id/btn_settings"
+                android:layout_width="100dip"
+                android:layout_height="100dip"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+        <FrameLayout android:layout_height="fill_parent"
+            android:layout_width="0dip"
+            android:layout_weight="1">
+        </FrameLayout>
+        <FrameLayout android:layout_height="fill_parent"
+            android:layout_width="0dip"
+            android:layout_weight="1">
+        </FrameLayout>
+        <FrameLayout android:layout_height="fill_parent"
+            android:layout_width="0dip"
+            android:layout_weight="1">
+        </FrameLayout>
+        <FrameLayout android:layout_height="fill_parent"
+            android:layout_width="0dip"
+            android:layout_weight="1">
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+    </LinearLayout>
+    
+</LinearLayout>
+

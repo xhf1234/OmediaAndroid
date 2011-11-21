@@ -8,5 +8,7 @@ package org.tsinghua.omedia.consts;
 public interface OmediaConst {
     public static final String OmediaServerAddr = "166.111.137.72";
     public static final int OmediaServerPort = 10086;
+//    public static final String OmediaServerAddr = "10.0.2.2";
+//    public static final int OmediaServerPort = 8080;
     public static final String OmediaVersion = "0.3";
 }
