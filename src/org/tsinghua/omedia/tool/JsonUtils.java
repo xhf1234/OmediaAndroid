@@ -5,7 +5,12 @@ import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class JsonUtil {
+/**
+ * Json 工具类
+ * @author xuhongfeng
+ *
+ */
+public class JsonUtils {
     private static final ObjectMapper ob = new ObjectMapper();
     
     @SuppressWarnings("unchecked")

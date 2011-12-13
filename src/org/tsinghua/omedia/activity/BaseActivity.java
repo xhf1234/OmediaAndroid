@@ -1,6 +1,7 @@
 package org.tsinghua.omedia.activity;
 
 import org.tsinghua.omedia.OmediaApplication;
+import org.tsinghua.omedia.consts.ActionConst;
 import org.tsinghua.omedia.datasource.DataSource;
 import org.tsinghua.omedia.ui.dialog.AlertDialogFragment;
 
@@ -8,6 +9,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 
 /**
  * 
@@ -16,9 +18,9 @@ import android.app.FragmentTransaction;
  */
 public class BaseActivity extends Activity {
     protected OmediaApplication omedia = OmediaApplication.getInstance();
-    protected DataSource dataSource = omedia.getDatasource();
+    protected DataSource dataSource = DataSource.getInstance();
     
-    protected void showAlertDialog(String message) {
+    public void showAlertDialog(String message) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("alertDialog");
         if(prev != null) {
@@ -27,5 +29,18 @@ public class BaseActivity extends Activity {
         ft.addToBackStack(null);
         DialogFragment dialog = new AlertDialogFragment(message);
         dialog.show(ft, "alertDialog");
+    }
+    public void showAlertDialog(int stringId) {
+        String message = getResources().getString(stringId);
+        showAlertDialog(message);
+    }
+    
+    /**
+     * Account Token 错误
+     */
+    protected void tokenWrong() {
+        Intent intent = new Intent(this, LandingActivity.class);
+        intent.setAction(ActionConst.ACTION_TOKEN_WRONG);
+        startActivity(intent);
     }
 }

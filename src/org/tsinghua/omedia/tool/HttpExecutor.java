@@ -61,6 +61,9 @@ public class HttpExecutor {
         params.put(URLEncoder.encode(key), URLEncoder.encode(value));
         return this;
     }
+    public HttpExecutor addParam(String key, long value) {
+        return addParam(key, String.valueOf(value));
+    }
     
     public String exec() throws IOException {
         switch(type) {

@@ -2,16 +2,21 @@ package org.tsinghua.omedia.activity;
 
 
 import java.io.IOException;
-import java.util.Map;
 
-import org.tsinghua.omedia.OmediaApplication;
+import static org.tsinghua.omedia.consts.ResultCode.*;
+
 import org.tsinghua.omedia.R;
+import org.tsinghua.omedia.consts.ActionConst;
+import org.tsinghua.omedia.consts.ResultCode;
+import org.tsinghua.omedia.data.Account;
+import org.tsinghua.omedia.data.JsonObject;
+import org.tsinghua.omedia.datasource.DataSource;
 import org.tsinghua.omedia.datasource.OmediaPreference;
 import org.tsinghua.omedia.form.FormProcessor;
+import org.tsinghua.omedia.form.GetAccountForm;
 import org.tsinghua.omedia.form.LoginForm;
-import org.tsinghua.omedia.tool.JsonUtil;
+import org.tsinghua.omedia.service.HttpService;
 import org.tsinghua.omedia.tool.Logger;
-import org.tsinghua.omedia.tool.ResourceUtil;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,8 +31,6 @@ import android.widget.EditText;
  *
  */
 public class LandingActivity extends BaseActivity {
-    private static final int LOGIN_AUTH_SUCCESS = 1;
-    private static final int LOGIN_AUTH_FAILED = 2;
     
     private static final Logger logger = Logger.getLogger(LandingActivity.class);
 
@@ -35,14 +38,17 @@ public class LandingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.landing_activity);
+        String action = getIntent().getAction();
+        if(action!=null && action.equals(ActionConst.ACTION_TOKEN_WRONG)) {
+            showAlertDialog(R.string.token_wrong);
+        }
         initViewsFromPreferences();
         initListener();
     }
     
 
     private void initViewsFromPreferences() {
-        OmediaPreference preferences = OmediaApplication.getInstance()
-                .getDatasource().getPreference();
+        OmediaPreference preferences = DataSource.getInstance().getPreference();
         CheckBox cb = (CheckBox)findViewById(R.id.rememberPassword_login);
         cb.setChecked(preferences.isRememberPassword());
         EditText username = (EditText)findViewById(R.id.username_login);
@@ -69,24 +75,24 @@ public class LandingActivity extends BaseActivity {
     }
     
     private void doLogin(LoginForm form) {
-        new FormProcessor<LoginForm,String>(form) {
+        new FormProcessor<LoginForm>(this, form) {
 
             @Override
             protected String onProcessForm(LoginForm form) throws Exception {
-                return OmediaApplication.getInstance().getHttpService().login(form);
+                return HttpService.getInstance().login(form);
             }
 
             @Override
-            protected void onProcessSuccess(String result) {
+            protected void onProcessSuccess(JsonObject result, int resultCode) {
                 try {
-                    Map<String, Object> map = JsonUtil.read(result);
-                    Integer r = (Integer) map.get("result");
-                    switch(r) {
-                    case LOGIN_AUTH_SUCCESS:
-                        loginSuccess();
+                    switch(resultCode) {
+                    case Login.SUCCESS:
+                        Long accountId = result.getLong("accountId");
+                        Long token = result.getLong("token");
+                        loginSuccess(accountId, token);
                         break;
-                    case LOGIN_AUTH_FAILED:
-                        showAlertDialog(ResourceUtil.getString(R.string.login_auth_failed));
+                    case Login.FAILED:
+                        showAlertDialog(R.string.login_auth_failed);
                         break;
                     default: throw new IOException("unknow result code");
                     }
@@ -95,27 +101,65 @@ public class LandingActivity extends BaseActivity {
                 }
                 
             }
-
-            @Override
-            protected void onValidateFailed(String msg) {
-                showAlertDialog(msg);
-            }
         }.exec();
     }
     
-    private void loginSuccess() {
+    private void loginSuccess(final long accountId, final long token) {
         //update preferences
         OmediaPreference preferences = dataSource.getPreference();
         CheckBox cb = (CheckBox)findViewById(R.id.rememberPassword_login);
         preferences.setRememberPassword(cb.isChecked());
-        EditText username = (EditText)findViewById(R.id.username_login);
-        preferences.setUsername(username.getText().toString());
+        EditText usernameView = (EditText)findViewById(R.id.username_login);
+        final String username = usernameView.getText().toString();
+        preferences.setUsername(username);
         if(preferences.isRememberPassword()) {
             EditText password = (EditText)findViewById(R.id.password_login);
             preferences.setPassword(password.getText().toString());
         }
-        logger.debug("intent to MainActivity");
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        //从服务端更新账户信息
+        GetAccountForm form = new GetAccountForm(accountId, token);
+        new FormProcessor<GetAccountForm>(this, form) {
+            
+            @Override
+            protected String onProcessForm(GetAccountForm form)
+                    throws Exception {
+                return HttpService.getInstance().getAccount(form);
+            }
+            
+            @Override
+            protected void onProcessSuccess(JsonObject result, int resultCode) {
+                try {
+                    switch(resultCode) {
+                        case ResultCode.SUCCESS:
+                            String email = result.getString("email");
+                            String realName = result.getString("realName");
+                            String address = result.getString("address");
+                            String phone = result.getString("phone");
+                            long version = result.getLong("version");
+                            Account account = new Account();
+                            account.setAccountId(accountId);
+                            account.setAddress(address);
+                            account.setEmail(email);
+                            account.setPhone(phone);
+                            account.setRealName(realName);
+                            account.setUsername(username);
+                            dataSource.saveAccount(account);
+                            dataSource.saveAccountId(accountId);
+                            dataSource.saveToken(token);
+                            dataSource.saveAccountVersion(version);
+                            logger.debug("intent to MainActivity");
+                            Intent intent = new Intent(LandingActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            break;
+                    case ResultCode.TOKEN_WRONG:
+                        tokenWrong();
+                        break;
+                    default: throw new IOException("unknow result code");
+                    }
+                } catch(IOException e) {
+                    showAlertDialog(e.getMessage());
+                }
+            }
+        }.exec();
     }
 }

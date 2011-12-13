@@ -16,13 +16,16 @@ public class OmediaPreference {
     private static final String KEY_USERNAME = "omedia_username";
     private static final String KEY_PASSWORD = "omedia_password";
     private static final String KEY_REMEMBER_PASSWORD = "omedia_remember_password";
-    
+    private static final String KEY_FRIENDS_REQUEST_VERSION = "omedia_friends_request_version";
+    private static final String KEY_FRIENDS_VERSION = "omedia_friends_version";
+    private static final String KEY_ACCOUNT_VERSION = "omedia_account_version";
+
     private static OmediaPreference me;
     
     //singleton
     private OmediaPreference(){}
     
-    public static OmediaPreference getInstance() {
+    static OmediaPreference getInstance() {
         if(me != null) return me;
         synchronized (OmediaPreference.class) {
             if(me == null) {
@@ -54,6 +57,35 @@ public class OmediaPreference {
     
     public void setRememberPassword(boolean b) {
         preference().edit().putBoolean(KEY_REMEMBER_PASSWORD, b).commit();
+    }
+    
+    public long getFriendRequestVersion() {
+        return preference().getLong(genKey(KEY_FRIENDS_REQUEST_VERSION), -1L);
+    }
+    
+    public void setFriendRequestVersion(long version) {
+        preference().edit().putLong(genKey(KEY_FRIENDS_REQUEST_VERSION), version);
+    }
+    
+    public long getFriendVersion() {
+        return preference().getLong(genKey(KEY_FRIENDS_VERSION), -1L);
+    }
+    
+    public void setFriendVersion(long version) {
+        preference().edit().putLong(genKey(KEY_FRIENDS_VERSION), version);
+    }
+    
+    public long getAccountVersion() {
+        return preference().getLong(genKey(KEY_ACCOUNT_VERSION), -1L);
+    }
+    
+    public void setAccountVersion(long version) {
+        preference().edit().putLong(genKey(KEY_ACCOUNT_VERSION), version);
+    }
+    
+    private String genKey(String key) {
+        long accountId = DataSource.getInstance().getAccountId();
+        return key + accountId;
     }
     
     private SharedPreferences preference() {

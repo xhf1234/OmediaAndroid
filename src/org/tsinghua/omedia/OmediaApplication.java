@@ -1,8 +1,5 @@
 package org.tsinghua.omedia;
 
-import org.tsinghua.omedia.datasource.DataSource;
-import org.tsinghua.omedia.service.HttpService;
-
 import android.app.Application;
 import android.content.res.Configuration;
 
@@ -41,11 +38,4 @@ public class OmediaApplication extends Application {
         super.onTerminate();
     }
 
-    public HttpService getHttpService() {
-        return HttpService.getInstance();
-    }
-
-    public DataSource getDatasource() {
-        return DataSource.getInstance();
-    }
 }

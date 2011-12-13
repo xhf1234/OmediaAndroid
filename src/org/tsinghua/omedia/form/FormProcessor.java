@@ -1,6 +1,13 @@
 package org.tsinghua.omedia.form;
 
 
+import java.util.Map;
+
+import org.tsinghua.omedia.R;
+import org.tsinghua.omedia.activity.BaseActivity;
+import org.tsinghua.omedia.consts.ResultCode;
+import org.tsinghua.omedia.data.JsonObject;
+import org.tsinghua.omedia.tool.JsonUtils;
 import org.tsinghua.omedia.tool.Logger;
 
 import android.os.AsyncTask;
@@ -11,7 +18,7 @@ import android.os.AsyncTask;
  * @author xuhongfeng
  *
  */
-public abstract class FormProcessor<F extends AbstractForm, T> {
+public abstract class FormProcessor<F extends AbstractForm> {
     private static final Logger logger = Logger.getLogger(FormProcessor.class);
     
     private static final int RESULT_OK = 1;
@@ -20,13 +27,16 @@ public abstract class FormProcessor<F extends AbstractForm, T> {
 
     //表单
     protected F form;
+    private BaseActivity activity;
+    private JsonObject result;
+    private int resultCode;
     
     private String validateMsg;
     private Throwable throwable;
-    private T result;
     
-    public FormProcessor(F form) {
+    public FormProcessor(BaseActivity activity, F form) {
         this.form = form;
+        this.activity = activity;
     }
 
     public void exec() {
@@ -39,7 +49,11 @@ public abstract class FormProcessor<F extends AbstractForm, T> {
                     onValidateFailed(validateMsg);
                     break;
                 case RESULT_OK:
-                    onProcessSuccess(result);
+                    if(resultCode == ResultCode.SERVER_ERROR) {
+                        activity.showAlertDialog(R.string.server_error);
+                    } else {
+                        onProcessSuccess(result, resultCode);
+                    }
                     break;
                 case RESULT_EXCEPTION:
                     onExceptionCatched(throwable);
@@ -59,7 +73,10 @@ public abstract class FormProcessor<F extends AbstractForm, T> {
                         return RESULT_VALIDATE_FAILED;
                     }
                     //前端验证通过
-                    result = onProcessForm(form);
+                    String jsonResult = onProcessForm(form);
+                    Map<String, Object> values = JsonUtils.read(jsonResult);
+                    result = new JsonObject(values);
+                    resultCode = result.getInt("result");
                 } catch (Exception e) {
                     //处理异常
                     throwable = e;
@@ -72,31 +89,33 @@ public abstract class FormProcessor<F extends AbstractForm, T> {
     
     /**
      * 处理异常
-     * 默认行为是打log,子类可重写该方法
      * 在主线程中执行
      * @param e
      */
     protected void onExceptionCatched(Throwable e) {
         logger.error("Form Processor Exception", e);
+        activity.showAlertDialog(e.getMessage());
     }
     
     /**
      * 对表单进行逻辑处理
      * 在异步线程中执行
      */
-    protected abstract T onProcessForm(F form) throws Exception;
+    protected abstract String onProcessForm(F form) throws Exception;
     
     /**
      * 响应表单的处理结果
      * 在主线程中执行
      * @param result
      */
-    protected abstract void onProcessSuccess(T result);
+    protected abstract void onProcessSuccess(JsonObject result, int resultCode);
     
     /**
      * 表单验证失败的回调函数
      * 在主线程中执行
      * @param msg
      */
-    protected abstract void onValidateFailed(String msg);
+    protected void onValidateFailed(String msg) {
+        activity.showAlertDialog(msg);
+    }
 }

@@ -1,4 +1,4 @@
-package org.tsinghua.omedia.annotation.database;
+package org.tsinghua.omedia.annotation.form;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Table {
-    String name();
+@Target(ElementType.FIELD)
+public @interface AlphaOrNumber {
+    String msg() default "must be alphabeta or number";
 }

@@ -1,21 +1,46 @@
 package org.tsinghua.omedia.data;
 
+import org.tsinghua.omedia.annotation.db.Column;
+import org.tsinghua.omedia.annotation.db.NotNull;
+import org.tsinghua.omedia.annotation.db.PrimaryKey;
+
+import org.tsinghua.omedia.annotation.db.Table;
+import org.tsinghua.omedia.datasource.db.DbEntity;
+import org.tsinghua.omedia.tool.DbUtils;
+
+import android.content.ContentValues;
+
+import static org.tsinghua.omedia.consts.DatabaseConst.DataType;;
+
 
 /**
  * 
  * @author xuhongfeng
  *
  */
-public class Account {
+@Table(name="Account")
+public class Account implements DbEntity {
+    @PrimaryKey
+    @NotNull
+    @Column(name="accountId", type=DataType.BIGINT)
     private long accountId;
+    @NotNull
+    @Column(name="username", type=DataType.VARCHAR32)
     private String username;
-    private long token;
+    @NotNull
+    @Column(name="email", type=DataType.VARCHAR255)
     private String email;
+    @Column(name="realName", type=DataType.VARCHAR32)
     private String realName;
+    @Column(name="address", type=DataType.VARCHAR255)
     private String address;
+    @Column(name="phone", type=DataType.VARCHAR32)
     private String phone;
-    private long version;
     
+    @Override
+    public ContentValues toContentValues() {
+        return DbUtils.toContentValues(this);
+    }
     public long getAccountId() {
         return accountId;
     }
@@ -27,12 +52,6 @@ public class Account {
     }
     public void setUsername(String username) {
         this.username = username;
-    }
-    public long getToken() {
-        return token;
-    }
-    public void setToken(long token) {
-        this.token = token;
     }
     public String getEmail() {
         return email;
@@ -57,11 +76,5 @@ public class Account {
     }
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-    public long getVersion() {
-        return version;
-    }
-    public void setVersion(long version) {
-        this.version = version;
     }
 }

@@ -34,6 +34,10 @@ public class Logger {
         Log.e(tag, msg, e);
     }
     
+    public void error(Throwable e) {
+        Log.e(tag, "", e);
+    }
+    
     public void debug(String msg) {
         Log.d(tag, msg);
     }

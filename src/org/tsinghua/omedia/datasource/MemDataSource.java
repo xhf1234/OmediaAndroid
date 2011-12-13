@@ -1,6 +1,5 @@
 package org.tsinghua.omedia.datasource;
 
-import org.tsinghua.omedia.data.Account;
 
 /**
  * memory datasource
@@ -9,14 +8,15 @@ import org.tsinghua.omedia.data.Account;
  *
  */
 public class MemDataSource {
-    private Account loginAccount;
+    private Long accountId;
+    private long token;
     
     private static MemDataSource me;
     
     //singleton
     private MemDataSource(){}
     
-    public static MemDataSource getInstance() {
+    static MemDataSource getInstance() {
         if(me != null) {
             return me;
         }
@@ -28,19 +28,28 @@ public class MemDataSource {
         return me;
     }
     
-    /**
-     * 
-     * @return get current login account
-     */
-    public Account getLoginAccount() {
-        return loginAccount;
+    public long getAccountId() {
+        return accountId;
     }
     
-    /**
-     * 
-     * @param account
-     */
-    public void setLoginAccount(Account account) {
-        loginAccount = account;
+    public long getToken() {
+        return token;
+    }
+    
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
+    public void setToken(long token) {
+        this.token = token;
+    }
+
+    public boolean isLogin() {
+        return accountId != null;
+    }
+    
+    public void logout() {
+        accountId = null;
+        token = -1L;
     }
 }

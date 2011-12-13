@@ -5,11 +5,13 @@ package org.tsinghua.omedia.consts;
  * @author xuhongfeng
  *
  */
-public interface UrlConst {
+public class UrlConst {
 
     public static final String BaseUrl = "http://"
             + OmediaConst.OmediaServerAddr+":"
             + OmediaConst.OmediaServerPort+"/omedia/";
     
     public static final String LoginUrl = BaseUrl+"login.do";
+    public static final String GetAccountUrl = BaseUrl+"getAccount.do";
+    public static final String CheckDataVersionUrl = BaseUrl+"checkDataVersion.do";
 }
