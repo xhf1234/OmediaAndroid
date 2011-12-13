@@ -3,14 +3,12 @@ package org.tsinghua.omedia.data;
 import org.tsinghua.omedia.annotation.db.Column;
 import org.tsinghua.omedia.annotation.db.NotNull;
 import org.tsinghua.omedia.annotation.db.PrimaryKey;
-
 import org.tsinghua.omedia.annotation.db.Table;
+import org.tsinghua.omedia.consts.DatabaseConst.DataType;
 import org.tsinghua.omedia.datasource.db.DbEntity;
-import org.tsinghua.omedia.tool.DbUtils;
+import org.tsinghua.omedia.datasource.db.DbUtils;
 
 import android.content.ContentValues;
-
-import static org.tsinghua.omedia.consts.DatabaseConst.DataType;;
 
 
 /**

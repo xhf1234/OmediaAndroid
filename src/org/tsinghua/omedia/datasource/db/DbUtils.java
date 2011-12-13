@@ -1,4 +1,4 @@
-package org.tsinghua.omedia.tool;
+package org.tsinghua.omedia.datasource.db;
 
 import java.lang.reflect.Field;
 
@@ -6,11 +6,10 @@ import org.tsinghua.omedia.annotation.db.Column;
 import org.tsinghua.omedia.annotation.db.NotNull;
 import org.tsinghua.omedia.annotation.db.PrimaryKey;
 import org.tsinghua.omedia.annotation.db.Table;
-import org.tsinghua.omedia.datasource.db.DbEntity;
+import org.tsinghua.omedia.consts.DatabaseConst.DataType;
+import org.tsinghua.omedia.tool.Logger;
 
 import android.content.ContentValues;
-
-import static org.tsinghua.omedia.consts.DatabaseConst.DataType;
 
 /**
  * 数据库工具类

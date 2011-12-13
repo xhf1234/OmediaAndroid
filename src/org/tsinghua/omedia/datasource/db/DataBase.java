@@ -1,14 +1,14 @@
 package org.tsinghua.omedia.datasource.db;
 
+import static org.tsinghua.omedia.consts.DatabaseConst.DB_NAME;
+import static org.tsinghua.omedia.consts.DatabaseConst.DB_VERSION;
+
 import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.data.Account;
-import org.tsinghua.omedia.tool.DbUtils;
 import org.tsinghua.omedia.tool.Logger;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import static org.tsinghua.omedia.consts.DatabaseConst.*;
 
 /**
  * 封装数据库操作
