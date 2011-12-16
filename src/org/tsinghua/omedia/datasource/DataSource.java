@@ -2,6 +2,7 @@ package org.tsinghua.omedia.datasource;
 
 import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.datasource.db.DataBase;
+import org.tsinghua.omedia.worker.WorkerManager;
 
 
 
@@ -75,6 +76,23 @@ public class DataSource {
      */
     public void saveAccount(Account account) {
         getDataBase().saveOrUpdateAccount(account);
+    }
+    
+    public String[] getCcnFiles() {
+        WorkerManager.getInstance().getCcnWorker().waitingForData();
+        return getMemDataSource().getCcnFiles();
+    }
+    
+    public void setCcnFiles(String[] ccnFiles) {
+        getMemDataSource().setCcnFiles(ccnFiles);
+    }
+    
+    public String getCcnHost() {
+        return "166.111.137.72";
+    }
+    
+    public String getCcnUri() {
+        return "ccnx:/node1";
     }
     
     public OmediaPreference getPreference() {

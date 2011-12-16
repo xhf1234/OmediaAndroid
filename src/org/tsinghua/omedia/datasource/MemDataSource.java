@@ -10,6 +10,7 @@ package org.tsinghua.omedia.datasource;
 public class MemDataSource {
     private Long accountId;
     private long token;
+    private String[] ccnFiles;
     
     private static MemDataSource me;
     
@@ -51,5 +52,13 @@ public class MemDataSource {
     public void logout() {
         accountId = null;
         token = -1L;
+    }
+
+    public String[] getCcnFiles() {
+        return ccnFiles;
+    }
+
+    public void setCcnFiles(String[] ccnFiles) {
+        this.ccnFiles = ccnFiles;
     }
 }
