@@ -1,5 +1,7 @@
 package org.tsinghua.omedia.activity;
 
+import java.io.File;
+
 import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.datasource.DataSource;
 
@@ -27,5 +29,13 @@ public class BaseActivity extends Activity implements OmediaActivityIntf {
     public void tokenWrong() {
         OmediaActivityDelegate.tokenWrong(this);
     }
+
     
+    /**
+     * 打开文件
+     * @param file
+     */
+    public void openFile(File file){
+        OmediaActivityDelegate.openFile(file, this);
+    }
 }

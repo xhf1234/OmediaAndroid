@@ -1,5 +1,7 @@
 package org.tsinghua.omedia.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -7,6 +9,7 @@ import org.ccnx.android.ccnlib.CCNxConfiguration;
 import org.ccnx.android.ccnlib.CCNxServiceControl;
 import org.ccnx.ccn.CCNHandle;
 import org.ccnx.ccn.impl.CCNNetworkManager.NetworkProtocol;
+import org.ccnx.ccn.io.CCNInputStream;
 import org.ccnx.ccn.profiles.ccnd.FaceManager;
 import org.ccnx.ccn.profiles.ccnd.PrefixRegistrationManager;
 import org.ccnx.ccn.profiles.nameenum.BasicNameEnumeratorListener;
@@ -14,6 +17,7 @@ import org.ccnx.ccn.profiles.nameenum.CCNNameEnumerator;
 import org.ccnx.ccn.protocol.ContentName;
 import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.datasource.DataSource;
+import org.tsinghua.omedia.datasource.sdcard.CcnFileDatasource;
 import org.tsinghua.omedia.tool.Logger;
 
 import android.os.AsyncTask;
@@ -46,6 +50,55 @@ public class CcnService {
         LsrepoTask task = new LsrepoTask();
         task.execute(uri);
         return task;
+    }
+    
+    public void ccnGetFile(final String ccnFile) throws IOException {
+        AsyncTask<Void, Void, Throwable> task = new AsyncTask<Void, Void, Throwable>() {
+
+            @Override
+            protected Throwable doInBackground(Void... params) {
+                try {
+                    String uri = DataSource.getInstance().getCcnUri();
+                    ContentName name = ContentName.fromURI(uri+"/"+ccnFile);
+                    CCNHandle handle = CCNHandle.open();
+                    String filePath = CcnFileDatasource.getInstance()
+                            .getAbsolutePath(ccnFile);
+                    File file = new File(filePath);
+                    FileOutputStream fos = null;
+                    CCNInputStream input = null;
+                    try {
+                        fos = new FileOutputStream(file);
+                        input = new CCNInputStream(name, handle);
+                        byte [] buffer = new byte[1024];
+                        int readed;
+                        while((readed=input.read(buffer)) != -1) {
+                            fos.write(buffer, 0, readed);
+                            fos.flush();
+                        }
+                    } finally {
+                        try {
+                            if(input != null) input.close();
+                        } finally {
+                            if(fos != null) fos.close();
+                        }
+                    }
+                } catch (Throwable e) {
+                    return e;
+                }
+                return null;
+            }
+            
+        };
+        task.execute();
+        Throwable e;
+        try {
+            e = task.get();
+        } catch (Throwable e1) {
+            e = e1;
+        }
+        if(e != null) {
+            throw new IOException(e);
+        }
     }
     
     private boolean isCcnRunning() {
@@ -81,12 +134,11 @@ public class CcnService {
         if(ccnd != null) return ccnd;
         synchronized (this) {
             if(ccnd == null) {
-                String uri = DataSource.getInstance().getCcnUri();
                 String host = DataSource.getInstance().getCcnHost();
                 CCNxConfiguration.config(OmediaApplication.getInstance().getApplicationContext());
                 ccnd = new CCNxServiceControl(OmediaApplication.getInstance().getApplicationContext());
                 ccnd.startCcnd();
-                ccndc(uri, host);
+                ccndc("ccnx:/", host);
             }
         }
         if(ccnd == null) throw new IOException("start ccnd failed");
