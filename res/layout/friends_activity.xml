@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/friendsTabView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+        
+        <ListView
+            android:id="@+id/friendsList"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </ListView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/searchTabView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.11" >
+
+            <EditText
+                android:id="@+id/searchText"
+                android:layout_width="800dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="50dp" />
+
+            <Button
+                android:id="@+id/searchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="50dp"
+                android:layout_toRightOf="@+id/searchText"
+                android:text="搜索" />
+            
+            <ListView
+            	android:id="@+id/searchResult"
+            	android:layout_width="fill_parent"
+            	android:layout_height="fill_parent" 
+            	android:layout_below="@id/searchText">
+        	</ListView>
+        
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/socialgraphTabView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/searchResult"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </ListView>
+
+    </LinearLayout>
+
+</FrameLayout>

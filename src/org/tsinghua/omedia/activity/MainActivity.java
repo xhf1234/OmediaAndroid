@@ -33,5 +33,15 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+        
+        findViewById(R.id.btn_friends).setOnClickListener(new OnClickListener() {
+            
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
+                startActivity(intent);
+            }
+        });
+        
+        
     }
 }

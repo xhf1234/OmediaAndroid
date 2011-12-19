@@ -18,5 +18,7 @@
         </activity>
         <activity android:name=".activity.CcnActivity">
         </activity>
+        <activity android:name=".activity.FriendsActivity">
+        </activity>
     </application>
 </manifest>
