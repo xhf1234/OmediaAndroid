@@ -1,8 +1,10 @@
 package org.tsinghua.omedia.form;
 
 import org.tsinghua.omedia.annotation.form.AlphaOrNumber;
+import org.tsinghua.omedia.annotation.form.HttpParam;
 import org.tsinghua.omedia.annotation.form.NotEmpty;
 import org.tsinghua.omedia.annotation.form.Size;
+import org.tsinghua.omedia.consts.OmediaConst;
 
 
 /**
@@ -11,15 +13,20 @@ import org.tsinghua.omedia.annotation.form.Size;
  *
  */
 public class LoginForm extends AbstractForm {
+    @HttpParam(name="username")
     @NotEmpty(msg="用户名不能为空")
     @Size(min=4,minMsg="用户名不能少于4位",max=32,maxMsg="用户名不能超过32位")
     @AlphaOrNumber(msg="用户名必须由字母或数字组成")
     private String username;
-    
+
+    @HttpParam(name="password")
     @NotEmpty(msg="密码不能为空")
     @Size(min=6,minMsg="密码不能少于6位",max=32,maxMsg="密码不能超过32位")
     @AlphaOrNumber(msg="密码必须由字母或数字组成")
     private String password;
+    
+    @HttpParam(name="omediaVersion")
+    private String omediaVersion = OmediaConst.OmediaVersion;
     
     private boolean rememberPassword;
 
@@ -45,6 +52,10 @@ public class LoginForm extends AbstractForm {
 
     public void setRememberPassword(boolean rememberPassword) {
         this.rememberPassword = rememberPassword;
+    }
+
+    public String getOmediaVersion() {
+        return omediaVersion;
     }
 
     @Override

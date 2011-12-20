@@ -4,7 +4,7 @@ package org.tsinghua.omedia.form;
 import java.util.Map;
 
 import org.tsinghua.omedia.R;
-import org.tsinghua.omedia.activity.BaseActivity;
+import org.tsinghua.omedia.activity.OmediaActivityIntf;
 import org.tsinghua.omedia.consts.ResultCode;
 import org.tsinghua.omedia.data.JsonObject;
 import org.tsinghua.omedia.tool.JsonUtils;
@@ -27,14 +27,14 @@ public abstract class FormProcessor<F extends AbstractForm> {
 
     //表单
     protected F form;
-    private BaseActivity activity;
+    private OmediaActivityIntf activity;
     private JsonObject result;
     private int resultCode;
     
     private String validateMsg;
     private Throwable throwable;
     
-    public FormProcessor(BaseActivity activity, F form) {
+    public FormProcessor(OmediaActivityIntf activity, F form) {
         this.form = form;
         this.activity = activity;
     }

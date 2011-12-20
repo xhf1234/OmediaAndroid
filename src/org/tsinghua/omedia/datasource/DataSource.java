@@ -78,6 +78,33 @@ public class DataSource {
         getDataBase().saveOrUpdateAccount(account);
     }
     
+    public Account getAccount(long accountId) {
+        return getDataBase().getAccount(accountId);
+    }
+    
+    public long getAccountVersion() {
+        return getPreference().getAccountVersion();
+    }
+    
+    public void setAccountVersion(long accountVersion) {
+        getPreference().setAccountVersion(accountVersion);
+    }
+
+    public long getFriendRequestVersion() {
+        return getPreference().getFriendRequestVersion();
+    }
+    
+    public void setFriendRequestVersion(long friendRequestVersion) {
+        getPreference().setFriendRequestVersion(friendRequestVersion);
+    }
+    public long getFriendsVersion() {
+        return getPreference().getFriendsVersion();
+    }
+    
+    public void setFriendsVersion(long friendsVersion) {
+        getPreference().setFriendsVersion(friendsVersion);
+    }
+    
     public String[] getCcnFiles() {
         WorkerManager.getInstance().getCcnWorker().waitingForData();
         return getMemDataSource().getCcnFiles();

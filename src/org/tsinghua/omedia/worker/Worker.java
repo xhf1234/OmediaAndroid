@@ -1,5 +1,7 @@
 package org.tsinghua.omedia.worker;
 
+import org.tsinghua.omedia.tool.OmediaConsole;
+
 import android.os.AsyncTask;
 
 /**
@@ -8,6 +10,8 @@ import android.os.AsyncTask;
  *
  */
 public abstract class Worker extends AsyncTask<Void, Void, Void> {
+    protected OmediaConsole omediaConsole = new OmediaConsole();
+    
     protected volatile boolean running = false;
     
     /**

@@ -7,6 +7,7 @@ import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.tool.Logger;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -48,6 +49,18 @@ public class DataBase extends SQLiteOpenHelper {
     public void saveOrUpdateAccount(Account account) {
         db.replaceOrThrow(DbUtils.getTableName(Account.class), null,
                 account.toContentValues());
+    }
+    
+    public Account getAccount(long accountId) {
+        Cursor cursor = db.query(DbUtils.getTableName(Account.class), null,
+                Account.COL_ACCOUNT_ID + " = ?", new String[] {
+                String.valueOf(accountId)
+            }, null, null, null, null);
+        if(cursor.moveToFirst()) {
+            return Account.fromCursor(cursor);
+        } else {
+            return null;
+        }
     }
 
     @Override

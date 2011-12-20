@@ -1,21 +1,15 @@
 package org.tsinghua.omedia.activity;
 
 
-import java.io.IOException;
-
-import static org.tsinghua.omedia.consts.ResultCode.*;
-
 import org.tsinghua.omedia.R;
 import org.tsinghua.omedia.consts.ActionConst;
-import org.tsinghua.omedia.consts.ResultCode;
 import org.tsinghua.omedia.data.Account;
-import org.tsinghua.omedia.data.JsonObject;
 import org.tsinghua.omedia.datasource.DataSource;
 import org.tsinghua.omedia.datasource.OmediaPreference;
-import org.tsinghua.omedia.form.FormProcessor;
 import org.tsinghua.omedia.form.GetAccountForm;
 import org.tsinghua.omedia.form.LoginForm;
-import org.tsinghua.omedia.service.HttpService;
+import org.tsinghua.omedia.serverAPI.GetAccountAPI;
+import org.tsinghua.omedia.serverAPI.LoginAPI;
 import org.tsinghua.omedia.tool.Logger;
 
 import android.content.Intent;
@@ -45,7 +39,6 @@ public class LandingActivity extends BaseActivity {
         initViewsFromPreferences();
         initListener();
     }
-    
 
     private void initViewsFromPreferences() {
         OmediaPreference preferences = DataSource.getInstance().getPreference();
@@ -75,33 +68,20 @@ public class LandingActivity extends BaseActivity {
     }
     
     private void doLogin(LoginForm form) {
-        new FormProcessor<LoginForm>(this, form) {
-
+        new LoginAPI(form, this) {
             @Override
-            protected String onProcessForm(LoginForm form) throws Exception {
-                return HttpService.getInstance().login(form);
+            protected void onLoginSuccess(long accountId, long token) {
+                loginSuccess(accountId, token);
             }
-
             @Override
-            protected void onProcessSuccess(JsonObject result, int resultCode) {
-                try {
-                    switch(resultCode) {
-                    case Login.SUCCESS:
-                        Long accountId = result.getLong("accountId");
-                        Long token = result.getLong("token");
-                        loginSuccess(accountId, token);
-                        break;
-                    case Login.FAILED:
-                        showAlertDialog(R.string.login_auth_failed);
-                        break;
-                    default: throw new IOException("unknow result code");
-                    }
-                } catch (IOException e) {
-                    showAlertDialog(e.getMessage());
-                }
-                
+            protected void onLoginFailed() {
+                showAlertDialog(R.string.login_auth_failed);
             }
-        }.exec();
+            @Override
+            protected void onSoftwareNeedUpdate() {
+                showAlertDialog(R.string.software_need_update);
+            }
+        }.call();
     }
     
     private void loginSuccess(final long accountId, final long token) {
@@ -116,50 +96,21 @@ public class LandingActivity extends BaseActivity {
             EditText password = (EditText)findViewById(R.id.password_login);
             preferences.setPassword(password.getText().toString());
         }
+        //save accountId and token in MemDatasource
+        dataSource.saveAccountId(accountId);
+        dataSource.saveToken(token);
         //从服务端更新账户信息
         GetAccountForm form = new GetAccountForm(accountId, token);
-        new FormProcessor<GetAccountForm>(this, form) {
-            
+        new GetAccountAPI(form, username, this) {
+
             @Override
-            protected String onProcessForm(GetAccountForm form)
-                    throws Exception {
-                return HttpService.getInstance().getAccount(form);
+            protected void onGetAccountSuccess(Account account, long version) {
+                dataSource.saveAccount(account);
+                dataSource.saveAccountVersion(version);
+                logger.debug("intent to MainActivity");
+                Intent intent = new Intent(LandingActivity.this, MainActivity.class);
+                startActivity(intent);
             }
-            
-            @Override
-            protected void onProcessSuccess(JsonObject result, int resultCode) {
-                try {
-                    switch(resultCode) {
-                        case ResultCode.SUCCESS:
-                            String email = result.getString("email");
-                            String realName = result.getString("realName");
-                            String address = result.getString("address");
-                            String phone = result.getString("phone");
-                            long version = result.getLong("version");
-                            Account account = new Account();
-                            account.setAccountId(accountId);
-                            account.setAddress(address);
-                            account.setEmail(email);
-                            account.setPhone(phone);
-                            account.setRealName(realName);
-                            account.setUsername(username);
-                            dataSource.saveAccount(account);
-                            dataSource.saveAccountId(accountId);
-                            dataSource.saveToken(token);
-                            dataSource.saveAccountVersion(version);
-                            logger.debug("intent to MainActivity");
-                            Intent intent = new Intent(LandingActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            break;
-                    case ResultCode.TOKEN_WRONG:
-                        tokenWrong();
-                        break;
-                    default: throw new IOException("unknow result code");
-                    }
-                } catch(IOException e) {
-                    showAlertDialog(e.getMessage());
-                }
-            }
-        }.exec();
+        }.call();
     }
 }

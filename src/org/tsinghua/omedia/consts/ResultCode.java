@@ -6,11 +6,17 @@ package org.tsinghua.omedia.consts;
  *
  */
 public class ResultCode extends OmediaConst {
+    //服务端错误
     public static final int SERVER_ERROR = -1;
+    //请求处理成功
     public static final int SUCCESS = 1;
+    //token过期
     public static final int TOKEN_WRONG = 3;
     
     public static class Login extends ResultCode {
+        //验证失败
         public static final int FAILED = 2;
+        //客户端版本需要升级
+        public static final int SOFTWARE_NEED_UPDATE = 4;
     }
 }

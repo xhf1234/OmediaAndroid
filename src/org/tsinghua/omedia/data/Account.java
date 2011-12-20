@@ -5,10 +5,12 @@ import org.tsinghua.omedia.annotation.db.NotNull;
 import org.tsinghua.omedia.annotation.db.PrimaryKey;
 import org.tsinghua.omedia.annotation.db.Table;
 import org.tsinghua.omedia.consts.DatabaseConst.DataType;
+import org.tsinghua.omedia.datasource.db.CursorHelper;
 import org.tsinghua.omedia.datasource.db.DbEntity;
 import org.tsinghua.omedia.datasource.db.DbUtils;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 
 /**
@@ -18,6 +20,13 @@ import android.content.ContentValues;
  */
 @Table(name="Account")
 public class Account implements DbEntity {
+    public static String COL_ACCOUNT_ID = "accountId";
+    public static String COL_USER_NAME = "username";
+    public static String COL_EMAIL = "email";
+    public static String COL_REAL_NAME = "realName";
+    public static String COL_ADDRESS = "address";
+    public static String COL_PHONE = "phone";
+    
     @PrimaryKey
     @NotNull
     @Column(name="accountId", type=DataType.BIGINT)
@@ -34,6 +43,18 @@ public class Account implements DbEntity {
     private String address;
     @Column(name="phone", type=DataType.VARCHAR32)
     private String phone;
+    
+    public static Account fromCursor(Cursor cursor) {
+        CursorHelper helper = new CursorHelper(cursor);
+        Account account = new Account();
+        account.setAccountId(helper.getLong(COL_ACCOUNT_ID));
+        account.setAddress(helper.getString(COL_ADDRESS));
+        account.setEmail(helper.getString(COL_EMAIL));
+        account.setPhone(helper.getString(COL_PHONE));
+        account.setRealName(helper.getString(COL_REAL_NAME));
+        account.setUsername(helper.getString(COL_USER_NAME));
+        return account;
+    }
     
     @Override
     public ContentValues toContentValues() {

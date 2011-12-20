@@ -2,21 +2,12 @@ package org.tsinghua.omedia.form;
 
 import org.tsinghua.omedia.annotation.form.HttpParam;
 
-/**
- * 表单，获得账户信息
- * @author xuhongfeng
- *
- */
-public class GetAccountForm extends AbstractForm {
+public class GetFriendRequestForm extends AbstractForm {
     @HttpParam(name="accountId")
     private long accountId;
     @HttpParam(name="token")
     private long token;
     
-    public GetAccountForm(long accountId, long token) {
-        this.accountId = accountId;
-        this.token = token;
-    }
     public long getAccountId() {
         return accountId;
     }

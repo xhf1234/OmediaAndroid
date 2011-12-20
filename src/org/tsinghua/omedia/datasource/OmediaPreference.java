@@ -67,11 +67,11 @@ public class OmediaPreference {
         preference().edit().putLong(genKey(KEY_FRIENDS_REQUEST_VERSION), version);
     }
     
-    public long getFriendVersion() {
+    public long getFriendsVersion() {
         return preference().getLong(genKey(KEY_FRIENDS_VERSION), -1L);
     }
     
-    public void setFriendVersion(long version) {
+    public void setFriendsVersion(long version) {
         preference().edit().putLong(genKey(KEY_FRIENDS_VERSION), version);
     }
     
