@@ -1,5 +1,6 @@
 package org.tsinghua.omedia.data;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,5 +30,23 @@ public class JsonObject {
     
     public String getString(String key) {
         return (String) values.get(key);
+    }
+    
+    @SuppressWarnings("rawtypes")
+    public JsonObject[] getArray(String key) {
+        List list = (List) values.get(key);
+        JsonObject[] array = null;
+        if(list==null || list.size()==0) {
+            array = new JsonObject[0];
+        } else {
+            array = new JsonObject[list.size()];
+            for(int i=0; i<list.size(); i++) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> map = (Map<String, Object>) list.get(i);
+                JsonObject jsonObject = new JsonObject(map);
+                array[i] = jsonObject;
+            }
+        }
+        return array;
     }
 }

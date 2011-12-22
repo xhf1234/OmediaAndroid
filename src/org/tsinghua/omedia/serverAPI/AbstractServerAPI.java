@@ -37,19 +37,26 @@ public abstract class AbstractServerAPI<F extends AbstractForm> implements Serve
     public void call() {
         new FormProcessor<F>(omediaActivity, form) {
 
+            @SuppressWarnings("unchecked")
             @Override
             protected String onProcessForm(F form) throws Exception {
                 HttpExecutor executor = HttpExecutor.httpGet(url);
                 Class<? extends AbstractForm> clazz = form.getClass();
-                Field[] fields = clazz.getDeclaredFields();
-                for(Field f:fields) {
-                    f.setAccessible(true);
-                    if(f.isAnnotationPresent(HttpParam.class)) {
-                        HttpParam anno = f.getAnnotation(HttpParam.class);
-                        String name = anno.name();
-                        Object value = f.get(form);
-                        executor.addParam(name, value.toString());
+                while(true) {
+                    Field[] fields = clazz.getDeclaredFields();
+                    for(Field f:fields) {
+                        f.setAccessible(true);
+                        if(f.isAnnotationPresent(HttpParam.class)) {
+                            HttpParam anno = f.getAnnotation(HttpParam.class);
+                            String name = anno.name();
+                            Object value = f.get(form);
+                            executor.addParam(name, value.toString());
+                        }
                     }
+                    if(clazz.getSuperclass() == AbstractForm.class) {
+                        break;
+                    }
+                    clazz = (Class<? extends AbstractForm>) clazz.getSuperclass();
                 }
                 return executor.exec();
             }

@@ -57,8 +57,10 @@ public class CheckDataVersionWorker extends SyncWorker {
                     };
                 }
                 //TODO
-                if(oldFriendRequestVersion == friendRequestVersion) {
+                if(oldFriendRequestVersion != friendRequestVersion) {
                     
+                }
+                if(oldFriendsVersion != friendsVersion) {
                 }
             }
         };
