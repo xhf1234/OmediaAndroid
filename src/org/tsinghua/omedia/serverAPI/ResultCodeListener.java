@@ -1,12 +1,12 @@
 package org.tsinghua.omedia.serverAPI;
 
-import org.tsinghua.omedia.data.JsonObject;
+import org.tsinghua.omedia.data.Jsonable;
 
 /**
  * 
  * @author xuhongfeng
  *
  */
-public abstract class ResultCodeListener {
-    protected abstract void exec(JsonObject result);
+public abstract class ResultCodeListener<T extends Jsonable> {
+    protected abstract void exec(T result);
 }

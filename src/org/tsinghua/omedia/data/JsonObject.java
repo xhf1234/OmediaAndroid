@@ -49,4 +49,10 @@ public class JsonObject {
         }
         return array;
     }
+    
+    public JsonObject getObject(String key) {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> map = (Map<String, Object>) values.get(key);
+        return new JsonObject(map);
+    }
 }

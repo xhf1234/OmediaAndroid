@@ -7,9 +7,11 @@ import java.util.Map;
 import org.tsinghua.omedia.activity.OmediaActivityIntf;
 import org.tsinghua.omedia.annotation.form.HttpParam;
 import org.tsinghua.omedia.data.JsonObject;
+import org.tsinghua.omedia.data.Jsonable;
 import org.tsinghua.omedia.form.AbstractForm;
 import org.tsinghua.omedia.form.FormProcessor;
 import org.tsinghua.omedia.tool.HttpExecutor;
+import org.tsinghua.omedia.tool.JsonUtils;
 
 /**
  * 
@@ -17,21 +19,23 @@ import org.tsinghua.omedia.tool.HttpExecutor;
  *
  * @param <F>
  */
-public abstract class AbstractServerAPI<F extends AbstractForm> implements ServerAPI {
+public abstract class AbstractServerAPI<F extends AbstractForm,  R extends Jsonable> implements ServerAPI {
     protected F form;
     protected OmediaActivityIntf omediaActivity;
     //API 的 url
     private String url;
     
-    private Map<Integer, ResultCodeListener> resultCodeListener =
-            new HashMap<Integer, ResultCodeListener>();
+    private Map<Integer, ResultCodeListener<R> > resultCodeListener =
+            new HashMap<Integer, ResultCodeListener<R> >();
     
-    protected AbstractServerAPI(F form, String url, OmediaActivityIntf omediaActivity) {
+    protected AbstractServerAPI(F form, OmediaActivityIntf omediaActivity) {
         this.form = form;
-        this.url = url;
+        this.url = getUrl();
         this.omediaActivity = omediaActivity;
         initResultCodeListener();
     }
+    
+    protected abstract String getUrl();
 
     @Override
     public void call() {
@@ -62,9 +66,10 @@ public abstract class AbstractServerAPI<F extends AbstractForm> implements Serve
             }
 
             @Override
-            protected void onProcessSuccess(JsonObject result, int resultCode) {
-                ResultCodeListener listener = resultCodeListener.get(resultCode);
+            protected void onProcessSuccess(JsonObject jsonResult, int resultCode) {
+                ResultCodeListener<R> listener = resultCodeListener.get(resultCode);
                 if(listener != null) {
+                    R result = JsonUtils.parseJsonObject(jsonResult, getResultType());
                     listener.exec(result);
                 } else {
                     omediaActivity.showAlertDialog("unknow resultCode:"+resultCode);
@@ -80,7 +85,7 @@ public abstract class AbstractServerAPI<F extends AbstractForm> implements Serve
      * @param resultCode
      * @param listener
      */
-    protected void registerResultCodeListener(int resultCode, ResultCodeListener listener) {
+    protected void registerResultCodeListener(int resultCode, ResultCodeListener<R> listener) {
         resultCodeListener.put(resultCode, listener);
     }
     
@@ -88,4 +93,6 @@ public abstract class AbstractServerAPI<F extends AbstractForm> implements Serve
      * 初始化ResultCodeListener
      */
     protected abstract void initResultCodeListener();
+    
+    protected abstract Class<R> getResultType();
 }

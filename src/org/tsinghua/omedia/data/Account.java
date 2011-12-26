@@ -4,6 +4,8 @@ import org.tsinghua.omedia.annotation.db.Column;
 import org.tsinghua.omedia.annotation.db.NotNull;
 import org.tsinghua.omedia.annotation.db.PrimaryKey;
 import org.tsinghua.omedia.annotation.db.Table;
+import org.tsinghua.omedia.annotation.json.JsonLong;
+import org.tsinghua.omedia.annotation.json.JsonString;
 import org.tsinghua.omedia.consts.DatabaseConst.DataType;
 import org.tsinghua.omedia.datasource.db.CursorHelper;
 import org.tsinghua.omedia.datasource.db.DbEntity;
@@ -19,7 +21,7 @@ import android.database.Cursor;
  *
  */
 @Table(name="Account")
-public class Account implements DbEntity {
+public class Account implements DbEntity, Jsonable {
     public static String COL_ACCOUNT_ID = "accountId";
     public static String COL_USER_NAME = "username";
     public static String COL_EMAIL = "email";
@@ -27,20 +29,26 @@ public class Account implements DbEntity {
     public static String COL_ADDRESS = "address";
     public static String COL_PHONE = "phone";
     
+    @JsonLong(name="accountId")
     @PrimaryKey
     @NotNull
     @Column(name="accountId", type=DataType.BIGINT)
     private long accountId;
+    @JsonString(name="username")
     @NotNull
     @Column(name="username", type=DataType.VARCHAR32)
     private String username;
+    @JsonString(name="email")
     @NotNull
     @Column(name="email", type=DataType.VARCHAR255)
     private String email;
+    @JsonString(name="realName")
     @Column(name="realName", type=DataType.VARCHAR32)
     private String realName;
+    @JsonString(name="address")
     @Column(name="address", type=DataType.VARCHAR255)
     private String address;
+    @JsonString(name="phone")
     @Column(name="phone", type=DataType.VARCHAR32)
     private String phone;
     
