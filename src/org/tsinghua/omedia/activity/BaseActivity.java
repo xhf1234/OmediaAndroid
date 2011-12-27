@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.datasource.DataSource;
+import org.tsinghua.omedia.event.Event;
 
 import android.app.Activity;
 
@@ -37,5 +38,15 @@ public class BaseActivity extends Activity implements OmediaActivityIntf {
      */
     public void openFile(File file){
         OmediaActivityDelegate.openFile(file, this);
+    }
+    
+    public void onResume() {
+        omedia.registerCurrentActivity(this);
+        super.onResume();
+    }
+    
+    @Override
+    public void onEventCatch(Event event) {
+        
     }
 }

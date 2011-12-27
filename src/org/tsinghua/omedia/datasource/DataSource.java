@@ -1,8 +1,10 @@
 package org.tsinghua.omedia.datasource;
 
+import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.data.FriendRequest;
 import org.tsinghua.omedia.datasource.db.DataBase;
+import org.tsinghua.omedia.event.FriendRequestUpdateEvent;
 import org.tsinghua.omedia.worker.WorkerManager;
 
 /**
@@ -127,6 +129,8 @@ public class DataSource {
     
     public void saveFriendRequests(FriendRequest[] friendRequests) {
         getMemDataSource().setFriendRequests(friendRequests);
+        OmediaApplication.getInstance().dispatchEvent(
+                new FriendRequestUpdateEvent());
     }
     
     public Account[] getFriends() {

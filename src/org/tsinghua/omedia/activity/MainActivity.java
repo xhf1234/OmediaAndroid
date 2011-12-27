@@ -1,6 +1,8 @@
 package org.tsinghua.omedia.activity;
 
 import org.tsinghua.omedia.R;
+import org.tsinghua.omedia.event.Event;
+import org.tsinghua.omedia.event.FriendRequestUpdateEvent;
 import org.tsinghua.omedia.worker.WorkerManager;
 
 import android.content.Intent;
@@ -24,7 +26,7 @@ public class MainActivity extends BaseActivity {
     }
     
     @Override
-    protected void onResume() {
+    public void onResume() {
         updateUI();
         WorkerManager.getInstance().startWorkers();
         super.onResume();
@@ -54,5 +56,13 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onEventCatch(Event event) {
+        if(event instanceof FriendRequestUpdateEvent) {
+            updateUI();
+        }
+        super.onEventCatch(event);
     }
 }

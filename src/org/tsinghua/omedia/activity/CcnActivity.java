@@ -29,7 +29,7 @@ public class CcnActivity extends BaseListActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         ccnFiles = DataSource.getInstance().getCcnFiles();
         setListAdapter(new CcnListAdapter(this));

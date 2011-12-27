@@ -1,10 +1,17 @@
 package org.tsinghua.omedia.activity;
 
 import java.io.File;
+
+import org.tsinghua.omedia.OmediaApplication;
+import org.tsinghua.omedia.datasource.DataSource;
+import org.tsinghua.omedia.event.Event;
+
 import android.app.TabActivity;
 
 public class BaseTabActivity extends TabActivity implements OmediaActivityIntf{
-
+    protected OmediaApplication omedia = OmediaApplication.getInstance();
+    protected DataSource dataSource = DataSource.getInstance();
+    
 	public void showAlertDialog(String message) {
         OmediaActivityDelegate.showAlertDialog(message, this);
     }
@@ -20,5 +27,14 @@ public class BaseTabActivity extends TabActivity implements OmediaActivityIntf{
     public void openFile(File file) {
         OmediaActivityDelegate.openFile(file, this);
     }
-	
+
+    public void onResume() {
+        omedia.registerCurrentActivity(this);
+        super.onResume();
+    }
+    
+    @Override
+    public void onEventCatch(Event event) {
+        
+    }
 }

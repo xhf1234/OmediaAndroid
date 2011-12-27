@@ -1,5 +1,8 @@
 package org.tsinghua.omedia;
 
+import org.tsinghua.omedia.activity.OmediaActivityIntf;
+import org.tsinghua.omedia.event.Event;
+
 import android.app.Application;
 import android.content.res.Configuration;
 
@@ -13,8 +16,24 @@ import android.content.res.Configuration;
 public class OmediaApplication extends Application {
     private static OmediaApplication omedia;
     
+    private OmediaActivityIntf currentActivity;
+    
     public static OmediaApplication getInstance() {
         return omedia;
+    }
+    
+    public OmediaActivityIntf getCurrentActivity() {
+        return currentActivity;
+    }
+    
+    public void dispatchEvent(Event event) {
+        if(getCurrentActivity() != null) {
+            getCurrentActivity().onEventCatch(event);
+        }
+    }
+    
+    public void registerCurrentActivity(OmediaActivityIntf activity) {
+        currentActivity = activity;
     }
 
     @Override

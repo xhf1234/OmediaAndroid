@@ -5,6 +5,7 @@ import java.io.File;
 import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.R;
 import org.tsinghua.omedia.activity.OmediaActivityIntf;
+import org.tsinghua.omedia.event.Event;
 
 import android.widget.Toast;
 
@@ -32,6 +33,11 @@ public class OmediaConsole implements OmediaActivityIntf {
         showAlertDialog(R.string.token_wrong);
     }
 
+    @Override
+    public void onEventCatch(Event event) {
+        
+    }
+    
     @Override
     public void openFile(File file) {
         throw new UnsupportedOperationException();
