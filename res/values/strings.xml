@@ -9,7 +9,13 @@
     <string name="add_yourself">不能添加自己为好友</string>
     <string name="already_your_friend">对方已在您的好友列表中</string>
     
-<!--friends_activity-->
+    <!--main_activity-->
+    <string name="btn_tblog">微博</string>
+    <string name="btn_friends">好友</string>
+    <string name="btn_notice">消息(${count})</string>
+    <string name="btn_settings">设置</string>
+    
+    <!--friends_activity-->
 	<string name="myfriends">我的好友</string>
 	<string name="searchfriends">搜索好友</string>
 	<string name="socialgraph">SocialGraph</string>

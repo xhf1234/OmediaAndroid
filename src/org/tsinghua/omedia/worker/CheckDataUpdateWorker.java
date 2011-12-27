@@ -53,7 +53,7 @@ public class CheckDataUpdateWorker extends SyncWorker {
                     updateFriends();
                 }
             }
-        };
+        }.call();
     }
     
     private void updateAccount() {
@@ -89,7 +89,11 @@ public class CheckDataUpdateWorker extends SyncWorker {
     }
     
     private void updateFriends() {
+        long accountId = dataSource.getAccountId();
+        long token = dataSource.getToken();
         GetFriendsForm getFriendsForm = new GetFriendsForm();
+        getFriendsForm.setAccountId(accountId);
+        getFriendsForm.setToken(token);
         new GetFriendsAPI(getFriendsForm, omediaConsole) {
             
             @Override

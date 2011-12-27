@@ -12,7 +12,7 @@
         <FrameLayout android:layout_height="fill_parent"
             android:layout_width="0dip"
             android:layout_weight="1">
-            <Button android:text="微博"
+            <Button android:text="@string/btn_tblog"
                 android:id="@+id/btn_tblog"
                 android:layout_width="100dip"
                 android:layout_height="100dip"
@@ -21,7 +21,7 @@
         <FrameLayout android:layout_height="fill_parent"
             android:layout_width="0dip"
             android:layout_weight="1">
-            <Button android:text="好友"
+            <Button android:text="@string/btn_friends"
                 android:id="@+id/btn_friends"
                 android:layout_width="100dip"
                 android:layout_height="100dip"
@@ -30,7 +30,7 @@
         <FrameLayout android:layout_height="fill_parent"
             android:layout_width="0dip"
             android:layout_weight="1">
-            <Button android:text="消息"
+            <Button android:text="@string/btn_notice"
                 android:id="@+id/btn_notice"
                 android:layout_width="100dip"
                 android:layout_height="100dip"
@@ -48,7 +48,7 @@
         <FrameLayout android:layout_height="fill_parent"
             android:layout_width="0dip"
             android:layout_weight="1">
-            <Button android:text="设置"
+            <Button android:text="@string/btn_settings"
                 android:id="@+id/btn_settings"
                 android:layout_width="100dip"
                 android:layout_height="100dip"

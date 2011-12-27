@@ -7,7 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
 public class MainActivity extends BaseActivity {
 
     @Override
@@ -19,11 +25,18 @@ public class MainActivity extends BaseActivity {
     
     @Override
     protected void onResume() {
+        updateUI();
         WorkerManager.getInstance().startWorkers();
         super.onResume();
     }
 
-
+    private void updateUI() {
+        int count = dataSource.getFriendRequests().length;
+        String text = getResources().getString(R.string.btn_notice)
+                .replace("${count}", count+"");
+        Button noticeBtn = (Button) findViewById(R.id.btn_notice);
+        noticeBtn.setText(text);
+    }
 
     private void initListener() {
         findViewById(R.id.btn_ccn).setOnClickListener(new OnClickListener() {
@@ -41,7 +54,5 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        
-        
     }
 }

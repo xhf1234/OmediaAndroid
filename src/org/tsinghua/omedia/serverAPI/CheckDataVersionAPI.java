@@ -52,7 +52,7 @@ public abstract class CheckDataVersionAPI extends AbstractServerAPI<CheckDataVer
         private long accountVersion;
         @JsonLong(name="friendRequest")
         private long friendRequestVersion;
-        @JsonLong(name="friendsVersion")
+        @JsonLong(name="friends")
         private long friendsVersion;
     }
 }

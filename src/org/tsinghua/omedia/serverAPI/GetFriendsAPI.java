@@ -23,7 +23,7 @@ public abstract class GetFriendsAPI extends AbstractServerAPI<GetFriendsForm, Re
     
     @Override
     protected String getUrl() {
-        return UrlConst.AddFriendUrl;
+        return UrlConst.GetFriendsUrl;
     }
 
 
