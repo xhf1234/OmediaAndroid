@@ -21,4 +21,10 @@
 	<string name="searchfriends">搜索好友</string>
 	<string name="socialgraph">SocialGraph</string>
 	<string name="search">搜索</string>
+	<string name="friends_name">昵称</string>
+	<string name="friends_realname">真实姓名</string>
+	<string name="friends_address">地址</string>
+	<string name="friends_phone">电话</string>
+	<string name="friends_email">电子邮件</string>
+	
 </resources>
