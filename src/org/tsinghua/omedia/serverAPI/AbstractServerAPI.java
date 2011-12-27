@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.tsinghua.omedia.activity.OmediaActivityIntf;
 import org.tsinghua.omedia.annotation.form.HttpParam;
+import org.tsinghua.omedia.consts.ResultCode;
 import org.tsinghua.omedia.data.JsonObject;
 import org.tsinghua.omedia.data.Jsonable;
 import org.tsinghua.omedia.datasource.DataSource;
@@ -73,6 +74,8 @@ public abstract class AbstractServerAPI<F extends AbstractForm,  R extends Jsona
                 if(listener != null) {
                     R result = JsonUtils.parseJsonObject(jsonResult, getResultType());
                     listener.exec(result);
+                } else if(resultCode == ResultCode.TOKEN_WRONG){
+                    omediaActivity.tokenWrong();
                 } else {
                     omediaActivity.showAlertDialog("unknow resultCode:"+resultCode);
                 }
