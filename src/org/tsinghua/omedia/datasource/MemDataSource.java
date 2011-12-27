@@ -23,6 +23,12 @@ public class MemDataSource {
     //singleton
     private MemDataSource(){}
     
+    public static void clearData() {
+        synchronized (MemDataSource.class) {
+            me = null;
+        }
+    }
+    
     static MemDataSource getInstance() {
         if(me != null) {
             return me;

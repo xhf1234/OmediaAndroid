@@ -5,6 +5,7 @@ import org.tsinghua.omedia.R;
 import org.tsinghua.omedia.consts.ActionConst;
 import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.datasource.DataSource;
+import org.tsinghua.omedia.datasource.MemDataSource;
 import org.tsinghua.omedia.datasource.OmediaPreference;
 import org.tsinghua.omedia.form.GetAccountForm;
 import org.tsinghua.omedia.form.LoginForm;
@@ -112,5 +113,11 @@ public class LandingActivity extends BaseActivity {
                 startActivity(intent);
             }
         }.call();
+    }
+
+    @Override
+    public void onResume() {
+        MemDataSource.clearData();
+        super.onResume();
     }
 }
