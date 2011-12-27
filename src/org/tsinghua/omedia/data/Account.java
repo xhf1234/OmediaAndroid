@@ -64,6 +64,23 @@ public class Account implements DbEntity, Jsonable {
         return account;
     }
     
+    public static Account fromJsonObject(JsonObject jsonObject) {
+        String email = jsonObject.getString("email");
+        String realName = jsonObject.getString("realName");
+        String address = jsonObject.getString("address");
+        String phone = jsonObject.getString("phone");
+        String username = jsonObject.getString("username");
+        long accountId = jsonObject.getLong("accountId");
+        Account account = new Account();
+        account.setAccountId(accountId);
+        account.setAddress(address);
+        account.setEmail(email);
+        account.setPhone(phone);
+        account.setRealName(realName);
+        account.setUsername(username);
+        return account;
+    }
+    
     @Override
     public ContentValues toContentValues() {
         return DbUtils.toContentValues(this);

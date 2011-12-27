@@ -7,5 +7,14 @@ package org.tsinghua.omedia.data;
  *
  */
 public class EmptyInstance {
+    public static FriendRequest[] EMPTY_FRIEND_REQUESTS = new FriendRequest[0];
+    
+    public static Account[] EMPTY_FRIENDS = new Account[0];
+    
+    public static String[] EMPTY_STRINGS = new String[0];
+    
+    public static class EmptyResultType implements Jsonable {
+        
+    }
 
 }

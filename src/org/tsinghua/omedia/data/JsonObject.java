@@ -55,4 +55,8 @@ public class JsonObject {
         Map<String, Object> map = (Map<String, Object>) values.get(key);
         return new JsonObject(map);
     }
+    
+    public void putObject(String key, Object object) {
+        values.put(key, object);
+    }
 }

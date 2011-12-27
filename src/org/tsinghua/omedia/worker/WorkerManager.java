@@ -11,6 +11,8 @@ public class WorkerManager {
     
     private CcnWorker ccnWorker = new CcnWorker(1000L);
     
+    private CheckDataUpdateWorker checkDataUpdateWorker = new CheckDataUpdateWorker();
+    
     private WorkerManager(){}
     
     public static WorkerManager getInstance() {
@@ -25,6 +27,7 @@ public class WorkerManager {
     
     public void startWorkers() {
         ccnWorker.start();
+        checkDataUpdateWorker.start();
     }
 
     public CcnWorker getCcnWorker() {

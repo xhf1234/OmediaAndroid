@@ -2,16 +2,25 @@ package org.tsinghua.omedia.data;
 
 import java.util.Date;
 
-public class FriendRequest {
+import org.tsinghua.omedia.annotation.json.JsonInt;
+import org.tsinghua.omedia.annotation.json.JsonLong;
+import org.tsinghua.omedia.annotation.json.JsonString;
+
+public class FriendRequest implements Jsonable {
     public static final int STATUS_INIT = 0;
     public static final int STATUS_ACCEPT = 1;
     public static final int STATUS_REJECT = 2;
     public static final int STATUS_DELETE = 3;
     
+    @JsonLong(name="accountId")
     private long accountId;
-    private Date time;
+    @JsonLong(name="time")
+    private long time;
+    @JsonLong(name="requesterId")
     private long requesterId;
+    @JsonInt(name="status")
     private int status;
+    @JsonString(name="msg")
     private String msg;
     
     public long getAccountId() {
@@ -21,13 +30,13 @@ public class FriendRequest {
         this.accountId = accountId;
     }
     public Date getTime() {
-        return time;
+        return new Date(time);
     }
     public void setTime(Date time) {
         //精度取秒
-        this.time = new Date();
-        this.time.setTime((time.getTime()%1000)*1000);
-        this.time = time;
+        Date date = new Date();
+        date.setTime((time.getTime()%1000)*1000);
+        this.time = date.getTime();
     }
     public long getRequesterId() {
         return requesterId;
@@ -48,46 +57,8 @@ public class FriendRequest {
         this.msg = msg;
     }
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (accountId ^ (accountId >>> 32));
-        result = prime * result + ((msg == null) ? 0 : msg.hashCode());
-        result = prime * result + (int) (requesterId ^ (requesterId >>> 32));
-        result = prime * result + status;
-        result = prime * result + ((time == null) ? 0 : time.hashCode());
-        return result;
-    }
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        FriendRequest other = (FriendRequest) obj;
-        if (accountId != other.accountId)
-            return false;
-        if (msg == null) {
-            if (other.msg != null)
-                return false;
-        } else if (!msg.equals(other.msg))
-            return false;
-        if (requesterId != other.requesterId)
-            return false;
-        if (status != other.status)
-            return false;
-        if (time == null) {
-            if (other.time != null)
-                return false;
-        } else if (!time.equals(other.time))
-            return false;
-        return true;
-    }
-    @Override
     public String toString() {
-        return "FriendRequest [accountId=" + accountId + ", time=" + time
+        return "FriendRequest [accountId=" + accountId + ", time=" + getTime()
                 + ", requesterId=" + requesterId + ", status=" + status
                 + ", msg=" + msg + "]";
     }

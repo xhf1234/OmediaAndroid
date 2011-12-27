@@ -8,6 +8,7 @@ import org.tsinghua.omedia.activity.OmediaActivityIntf;
 import org.tsinghua.omedia.annotation.form.HttpParam;
 import org.tsinghua.omedia.data.JsonObject;
 import org.tsinghua.omedia.data.Jsonable;
+import org.tsinghua.omedia.datasource.DataSource;
 import org.tsinghua.omedia.form.AbstractForm;
 import org.tsinghua.omedia.form.FormProcessor;
 import org.tsinghua.omedia.tool.HttpExecutor;
@@ -22,6 +23,7 @@ import org.tsinghua.omedia.tool.JsonUtils;
 public abstract class AbstractServerAPI<F extends AbstractForm,  R extends Jsonable> implements ServerAPI {
     protected F form;
     protected OmediaActivityIntf omediaActivity;
+    protected DataSource dataSource = DataSource.getInstance();
     //API 的 url
     private String url;
     

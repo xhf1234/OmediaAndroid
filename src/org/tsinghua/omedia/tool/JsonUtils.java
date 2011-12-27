@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.tsinghua.omedia.annotation.json.JsonArray;
+import org.tsinghua.omedia.annotation.json.JsonInt;
 import org.tsinghua.omedia.annotation.json.JsonLong;
 import org.tsinghua.omedia.annotation.json.JsonObj;
 import org.tsinghua.omedia.annotation.json.JsonString;
@@ -54,6 +55,16 @@ public class JsonUtils {
                     Long value = json.getLong(name);
                     try {
                         f.setLong(object, value);
+                    } catch (Exception e) {
+                        logger.error(e);
+                        return null;
+                    }
+                } else if(f.isAnnotationPresent(JsonInt.class)) {
+                    JsonInt anno = f.getAnnotation(JsonInt.class);
+                    String name = anno.name();
+                    Integer value = json.getInt(name);
+                    try {
+                        f.setInt(object, value);
                     } catch (Exception e) {
                         logger.error(e);
                         return null;

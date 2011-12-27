@@ -19,4 +19,11 @@ public class ResultCode extends OmediaConst {
         //客户端版本需要升级
         public static final int SOFTWARE_NEED_UPDATE = 4;
     }
+    
+    public static class AddFriend extends ResultCode {
+        //不能加自己为好友
+        public static final int ADD_YOUR_SELF = 4;
+        //已经在您的好友列表中
+        public static final int ALREADY_FRIEND = 5;
+    }
 }

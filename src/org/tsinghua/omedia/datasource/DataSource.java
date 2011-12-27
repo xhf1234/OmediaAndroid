@@ -1,10 +1,9 @@
 package org.tsinghua.omedia.datasource;
 
 import org.tsinghua.omedia.data.Account;
+import org.tsinghua.omedia.data.FriendRequest;
 import org.tsinghua.omedia.datasource.db.DataBase;
 import org.tsinghua.omedia.worker.WorkerManager;
-
-
 
 /**
  * 数据源 封装一些存取数据的对象和方法
@@ -120,6 +119,22 @@ public class DataSource {
     
     public String getCcnUri() {
         return "ccnx:/node1";
+    }
+    
+    public FriendRequest[] getFriendRequests() {
+        return getMemDataSource().getFriendRequests();
+    }
+    
+    public void saveFriendRequests(FriendRequest[] friendRequests) {
+        getMemDataSource().setFriendRequests(friendRequests);
+    }
+    
+    public Account[] getFriends() {
+        return getMemDataSource().getFriends();
+    }
+    
+    public void saveFriends(Account[] friends) {
+        getMemDataSource().setFriends(friends);
     }
     
     public OmediaPreference getPreference() {

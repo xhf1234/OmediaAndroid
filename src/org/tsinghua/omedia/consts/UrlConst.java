@@ -16,4 +16,6 @@ public class UrlConst {
     public static final String CheckDataVersionUrl = BaseUrl+"checkDataVersion.do";
     public static final String GetFriendRequestUrl = BaseUrl+"getFriendRequest.do";
     public static final String SearchFriendsUrl = BaseUrl+"searchFriends.do";
+    public static final String AddFriendUrl = BaseUrl+"addFriend.do";
+    public static final String GetFriendsUrl = BaseUrl+"getFriends.do";
 }

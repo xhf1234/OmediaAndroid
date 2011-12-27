@@ -6,6 +6,8 @@
     <string name="software_need_update">请升级至最新版的Omedia客户端</string>
     <string name="server_error">服务器错误</string>
     <string name="token_wrong">token错误，请重新登陆</string>
+    <string name="add_yourself">不能添加自己为好友</string>
+    <string name="already_your_friend">对方已在您的好友列表中</string>
     
 <!--friends_activity-->
 	<string name="myfriends">我的好友</string>
