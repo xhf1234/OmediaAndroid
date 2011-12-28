@@ -8,6 +8,7 @@
     <string name="token_wrong">token错误，请重新登陆</string>
     <string name="add_yourself">不能添加自己为好友</string>
     <string name="already_your_friend">对方已在您的好友列表中</string>
+    <string name="username_exist">用户名已存在</string>
     
     <!--main_activity-->
     <string name="btn_tblog">微博</string>

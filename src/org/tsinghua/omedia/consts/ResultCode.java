@@ -13,6 +13,11 @@ public class ResultCode extends OmediaConst {
     //token过期
     public static final int TOKEN_WRONG = 3;
     
+    public static class Register extends ResultCode {
+        //用户名已存在
+        public static final int USERNAME_EXIST = 4;
+    }
+    
     public static class Login extends ResultCode {
         //验证失败
         public static final int FAILED = 2;
