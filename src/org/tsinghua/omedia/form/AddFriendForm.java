@@ -1,8 +1,12 @@
-package org.tsinghua.omedia.serverAPI;
+package org.tsinghua.omedia.form;
 
 import org.tsinghua.omedia.annotation.form.HttpParam;
-import org.tsinghua.omedia.form.BaseForm;
 
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
 public class AddFriendForm extends BaseForm {
     @HttpParam(name="friendId")
     private long friendId;

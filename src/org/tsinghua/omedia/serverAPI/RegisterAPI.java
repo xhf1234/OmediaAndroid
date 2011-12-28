@@ -5,9 +5,15 @@ import org.tsinghua.omedia.activity.OmediaActivityIntf;
 import org.tsinghua.omedia.consts.ResultCode;
 import org.tsinghua.omedia.consts.UrlConst;
 import org.tsinghua.omedia.data.EmptyInstance;
+import org.tsinghua.omedia.data.EmptyInstance.EmptyResultType;
 import org.tsinghua.omedia.form.RegisterForm;
 
-public abstract class RegisterAPI extends AbstractServerAPI<RegisterForm, EmptyInstance.EmptyResultType> {
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
+public abstract class RegisterAPI extends AbstractServerAPI<RegisterForm> {
 
     
     protected RegisterAPI(RegisterForm form, OmediaActivityIntf omediaActivity) {
@@ -22,24 +28,14 @@ public abstract class RegisterAPI extends AbstractServerAPI<RegisterForm, EmptyI
     @Override
     protected void initResultCodeListener() {
         registerResultCodeListener(ResultCode.Register.USERNAME_EXIST,
-                new ResultCodeListener<EmptyInstance.EmptyResultType>() {
+                new ResultCodeListener<EmptyInstance.EmptyResultType>(EmptyResultType.class) {
+
             @Override
-            protected void exec(EmptyInstance.EmptyResultType result) {
+            protected void innerRun(EmptyResultType result) {
                 omediaActivity.showAlertDialog(R.string.username_exist);
-            }
-        });
-        registerResultCodeListener(ResultCode.SUCCESS, new ResultCodeListener<EmptyInstance.EmptyResultType>() {
-            @Override
-            protected void exec(EmptyInstance.EmptyResultType result) {
-                onSuccess();
             }
         });
     }
     
     protected abstract void onSuccess();
-
-    @Override
-    protected Class<EmptyInstance.EmptyResultType> getResultType() {
-        return EmptyInstance.EmptyResultType.class;
-    }
 }

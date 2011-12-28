@@ -13,7 +13,6 @@ import org.tsinghua.omedia.datasource.DataSource;
 import org.tsinghua.omedia.form.AbstractForm;
 import org.tsinghua.omedia.form.FormProcessor;
 import org.tsinghua.omedia.tool.HttpExecutor;
-import org.tsinghua.omedia.tool.JsonUtils;
 
 /**
  * 
@@ -21,15 +20,15 @@ import org.tsinghua.omedia.tool.JsonUtils;
  *
  * @param <F>
  */
-public abstract class AbstractServerAPI<F extends AbstractForm,  R extends Jsonable> implements ServerAPI {
+public abstract class AbstractServerAPI<F extends AbstractForm> implements ServerAPI {
     protected F form;
     protected OmediaActivityIntf omediaActivity;
     protected DataSource dataSource = DataSource.getInstance();
     //API 的 url
     private String url;
     
-    private Map<Integer, ResultCodeListener<R> > resultCodeListener =
-            new HashMap<Integer, ResultCodeListener<R> >();
+    private Map<Integer, ResultCodeListener<? extends Jsonable> > resultCodeListener =
+            new HashMap<Integer, ResultCodeListener<? extends Jsonable> >();
     
     protected AbstractServerAPI(F form, OmediaActivityIntf omediaActivity) {
         this.form = form;
@@ -70,10 +69,9 @@ public abstract class AbstractServerAPI<F extends AbstractForm,  R extends Jsona
 
             @Override
             protected void onProcessSuccess(JsonObject jsonResult, int resultCode) {
-                ResultCodeListener<R> listener = resultCodeListener.get(resultCode);
+                ResultCodeListener<? extends Jsonable> listener = resultCodeListener.get(resultCode);
                 if(listener != null) {
-                    R result = JsonUtils.parseJsonObject(jsonResult, getResultType());
-                    listener.exec(result);
+                    listener.exec(jsonResult);
                 } else if(resultCode == ResultCode.TOKEN_WRONG){
                     omediaActivity.tokenWrong();
                 } else {
@@ -90,7 +88,7 @@ public abstract class AbstractServerAPI<F extends AbstractForm,  R extends Jsona
      * @param resultCode
      * @param listener
      */
-    protected void registerResultCodeListener(int resultCode, ResultCodeListener<R> listener) {
+    protected void registerResultCodeListener(int resultCode, ResultCodeListener<? extends Jsonable> listener) {
         resultCodeListener.put(resultCode, listener);
     }
     
@@ -98,6 +96,4 @@ public abstract class AbstractServerAPI<F extends AbstractForm,  R extends Jsona
      * 初始化ResultCodeListener
      */
     protected abstract void initResultCodeListener();
-    
-    protected abstract Class<R> getResultType();
 }

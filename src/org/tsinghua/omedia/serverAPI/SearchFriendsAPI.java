@@ -7,10 +7,14 @@ import org.tsinghua.omedia.consts.UrlConst;
 import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.data.Jsonable;
 import org.tsinghua.omedia.form.SearchFriendsForm;
-import org.tsinghua.omedia.serverAPI.SearchFriendsAPI.ResultType;
 
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
 public abstract class SearchFriendsAPI extends
-        AbstractServerAPI<SearchFriendsForm, ResultType> {
+        AbstractServerAPI<SearchFriendsForm> {
 
     protected SearchFriendsAPI(SearchFriendsForm form, OmediaActivityIntf omediaActivity) {
         super(form, omediaActivity);
@@ -24,22 +28,17 @@ public abstract class SearchFriendsAPI extends
     @Override
     protected void initResultCodeListener() {
         registerResultCodeListener(ResultCode.SUCCESS,
-                new ResultCodeListener<ResultType>() {
+                new ResultCodeListener<ResultType>(ResultType.class) {
                     @Override
-                    protected void exec(ResultType result) {
+                    protected void innerRun(ResultType result) {
                         onSuccess(result.accounts);
                     }
         });
     }
 
     protected abstract void onSuccess(Account[] accounts);
-    
-    @Override
-    protected Class<ResultType> getResultType() {
-        return ResultType.class;
-    }
 
-    public static class ResultType implements Jsonable {
+    private static class ResultType implements Jsonable {
         @JsonArray(name="friends", type=Account.class)
         private Account[] accounts;
     }

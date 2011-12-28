@@ -8,7 +8,6 @@ import org.tsinghua.omedia.consts.UrlConst;
 import org.tsinghua.omedia.data.FriendRequest;
 import org.tsinghua.omedia.data.Jsonable;
 import org.tsinghua.omedia.form.GetFriendRequestForm;
-import org.tsinghua.omedia.serverAPI.GetFriendRequestAPI.ResultType;
 
 /**
  * 
@@ -16,7 +15,7 @@ import org.tsinghua.omedia.serverAPI.GetFriendRequestAPI.ResultType;
  *
  */
 public abstract class GetFriendRequestAPI extends
-        AbstractServerAPI<GetFriendRequestForm, ResultType>{
+        AbstractServerAPI<GetFriendRequestForm>{
 
     protected GetFriendRequestAPI(GetFriendRequestForm form, OmediaActivityIntf omediaActivity) {
         super(form, omediaActivity);
@@ -29,10 +28,11 @@ public abstract class GetFriendRequestAPI extends
 
     @Override
     protected void initResultCodeListener() {
-        registerResultCodeListener(ResultCode.SUCCESS, new ResultCodeListener<GetFriendRequestAPI.ResultType>() {
+        registerResultCodeListener(ResultCode.SUCCESS,
+                new ResultCodeListener<GetFriendRequestAPI.ResultType>(ResultType.class) {
             
             @Override
-            protected void exec(ResultType result) {
+            protected void innerRun(ResultType result) {
                 onSuccess(result.version, result.requests);
             }
         });
@@ -40,12 +40,7 @@ public abstract class GetFriendRequestAPI extends
 
     protected abstract void onSuccess(long version, FriendRequest[] requests);
     
-    @Override
-    protected Class<ResultType> getResultType() {
-        return ResultType.class;
-    }
-
-    public static class ResultType implements Jsonable {
+    private static class ResultType implements Jsonable {
         @JsonLong(name="version")
         private long version;
         @JsonArray(name="requests", type=FriendRequest.class)

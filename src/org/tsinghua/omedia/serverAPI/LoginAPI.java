@@ -4,17 +4,18 @@ import org.tsinghua.omedia.activity.OmediaActivityIntf;
 import org.tsinghua.omedia.annotation.json.JsonLong;
 import org.tsinghua.omedia.consts.ResultCode.Login;
 import org.tsinghua.omedia.consts.UrlConst;
+import org.tsinghua.omedia.data.EmptyInstance;
+import org.tsinghua.omedia.data.EmptyInstance.EmptyResultType;
 import org.tsinghua.omedia.data.Jsonable;
 import org.tsinghua.omedia.form.LoginForm;
-import org.tsinghua.omedia.serverAPI.LoginAPI.ResultType;
 
 /**
  * 
  * @author xuhongfeng
  *
  */
-public abstract class LoginAPI extends
-        AbstractServerAPI<LoginForm, ResultType> {
+public abstract class LoginAPI extends AbstractServerAPI<LoginForm> {
+    
     protected LoginAPI(LoginForm form, OmediaActivityIntf omediaActivity) {
         super(form, omediaActivity);
     }
@@ -24,27 +25,27 @@ public abstract class LoginAPI extends
         return UrlConst.LoginUrl;
     }
 
-
     @Override
     protected void initResultCodeListener() {
         registerResultCodeListener(Login.SUCCESS,
-                new ResultCodeListener<ResultType>() {
+                new ResultCodeListener<ResultType>(ResultType.class) {
                     @Override
-                    protected void exec(ResultType result) {
+                    protected void innerRun(ResultType result) {
                         onLoginSuccess(result.accountId, result.token);
                     }
         });
         registerResultCodeListener(Login.FAILED,
-                new ResultCodeListener<ResultType>() {
+                new ResultCodeListener<EmptyInstance.EmptyResultType>(EmptyResultType.class) {
                     @Override
-                    protected void exec(ResultType result) {
+                    protected void innerRun(EmptyResultType result) {
                         onLoginFailed();
                     }
         });
         registerResultCodeListener(Login.SOFTWARE_NEED_UPDATE,
-                new ResultCodeListener<ResultType>() {
+                new ResultCodeListener<EmptyInstance.EmptyResultType>(EmptyResultType.class) {
+
                     @Override
-                    protected void exec(ResultType result) {
+                    protected void innerRun(EmptyResultType result) {
                         onSoftwareNeedUpdate();
                     }
         });
@@ -53,15 +54,8 @@ public abstract class LoginAPI extends
     protected abstract void onLoginSuccess(long accountId, long token);
     protected abstract void onLoginFailed();
     protected abstract void onSoftwareNeedUpdate();
-    
-    @Override
-    protected Class<ResultType> getResultType() {
-        return ResultType.class;
-    }
 
-
-
-    public static class ResultType implements Jsonable {
+    private static class ResultType implements Jsonable {
         @JsonLong(name="accountId")
         private long accountId;
         @JsonLong(name="token")

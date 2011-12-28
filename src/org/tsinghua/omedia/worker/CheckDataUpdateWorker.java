@@ -5,11 +5,11 @@ import org.tsinghua.omedia.data.FriendRequest;
 import org.tsinghua.omedia.form.CheckDataVersionForm;
 import org.tsinghua.omedia.form.GetAccountForm;
 import org.tsinghua.omedia.form.GetFriendRequestForm;
+import org.tsinghua.omedia.form.GetFriendsForm;
 import org.tsinghua.omedia.serverAPI.CheckDataVersionAPI;
 import org.tsinghua.omedia.serverAPI.GetAccountAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendRequestAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendsAPI;
-import org.tsinghua.omedia.serverAPI.GetFriendsForm;
 
 /**
  * 调用服务端接口获得各种数据的版本号如accountVersion, friendsVersion

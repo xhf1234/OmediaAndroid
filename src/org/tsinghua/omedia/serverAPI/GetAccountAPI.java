@@ -8,15 +8,13 @@ import org.tsinghua.omedia.consts.UrlConst;
 import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.data.Jsonable;
 import org.tsinghua.omedia.form.GetAccountForm;
-import org.tsinghua.omedia.serverAPI.GetAccountAPI.ResultType;
 
 /**
  * 
  * @author xuhongfeng
  *
  */
-public abstract class GetAccountAPI extends
-        AbstractServerAPI<GetAccountForm, ResultType>{
+public abstract class GetAccountAPI extends AbstractServerAPI<GetAccountForm>{
 
     private String username;
     
@@ -32,10 +30,11 @@ public abstract class GetAccountAPI extends
 
     @Override
     protected void initResultCodeListener() {
-        registerResultCodeListener(ResultCode.SUCCESS, new ResultCodeListener<ResultType>() {
+        registerResultCodeListener(ResultCode.SUCCESS,
+                new ResultCodeListener<ResultType>(ResultType.class) {
 
             @Override
-            protected void exec(ResultType result) {
+            protected void innerRun(ResultType result) {
                 Account account = new Account();
                 account.setAccountId(form.getAccountId());
                 account.setAddress(result.address);
@@ -50,14 +49,7 @@ public abstract class GetAccountAPI extends
     
     protected abstract void onGetAccountSuccess(Account account, long version);
 
-    @Override
-    protected Class<ResultType> getResultType() {
-        return ResultType.class;
-    }
-
-
-
-    public static class ResultType implements Jsonable {
+    private static class ResultType implements Jsonable {
         @JsonString(name="email")
         private String email;
         @JsonString(name="realName")

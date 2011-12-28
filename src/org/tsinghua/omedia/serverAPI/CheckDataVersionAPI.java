@@ -6,14 +6,13 @@ import org.tsinghua.omedia.consts.ResultCode;
 import org.tsinghua.omedia.consts.UrlConst;
 import org.tsinghua.omedia.data.Jsonable;
 import org.tsinghua.omedia.form.CheckDataVersionForm;
-import org.tsinghua.omedia.serverAPI.CheckDataVersionAPI.ResultType;
 
 /**
  * 
  * @author xuhongfeng
  *
  */
-public abstract class CheckDataVersionAPI extends AbstractServerAPI<CheckDataVersionForm, ResultType> {
+public abstract class CheckDataVersionAPI extends AbstractServerAPI<CheckDataVersionForm> {
 
     protected CheckDataVersionAPI(CheckDataVersionForm form, OmediaActivityIntf omediaActivity) {
         super(form, omediaActivity);
@@ -24,14 +23,11 @@ public abstract class CheckDataVersionAPI extends AbstractServerAPI<CheckDataVer
         return UrlConst.CheckDataVersionUrl;
     }
 
-
-
     @Override
     protected void initResultCodeListener() {
-        registerResultCodeListener(ResultCode.SUCCESS, new ResultCodeListener<ResultType> () {
-
+        registerResultCodeListener(ResultCode.SUCCESS, new ResultCodeListener<ResultType> (ResultType.class) {
             @Override
-            protected void exec(ResultType result) {
+            protected void innerRun(ResultType result) {
                 onSuccess(result.accountVersion, result.friendRequestVersion,
                         result.friendsVersion);
             }
@@ -40,14 +36,7 @@ public abstract class CheckDataVersionAPI extends AbstractServerAPI<CheckDataVer
     
     protected abstract void onSuccess(long accountVersion, long friendRequestVersion, long friendsVersion);
 
-    @Override
-    protected Class<ResultType> getResultType() {
-        return ResultType.class;
-    }
-
-
-
-    public static class ResultType implements Jsonable {
+    private static class ResultType implements Jsonable {
         @JsonLong(name="account")
         private long accountVersion;
         @JsonLong(name="friendRequest")
