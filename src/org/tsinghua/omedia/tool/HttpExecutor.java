@@ -68,9 +68,9 @@ public class HttpExecutor {
     public String exec() throws IOException {
         switch(type) {
         case GET :
-            return innerHttpGet();
+            return new String(innerHttpGet().getBytes("ISO-8859-1"), "utf8");
         case POST :
-            return innserHttpPost();
+            return new String(innerHttpPost().getBytes("ISO-8859-1"), "utf8");
         default :  throw new IOException("unknow http type");
         }
     }
@@ -108,7 +108,7 @@ public class HttpExecutor {
         }
     }
 
-    private String innserHttpPost() throws IOException {
+    private String innerHttpPost() throws IOException {
         PostMethod postMethod = new PostMethod(url);
         List<NameValuePair> datas = new ArrayList<NameValuePair>();
         Set<String> keys = params.keySet();
