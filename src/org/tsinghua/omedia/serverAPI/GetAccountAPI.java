@@ -49,7 +49,7 @@ public abstract class GetAccountAPI extends AbstractServerAPI<GetAccountForm>{
     
     protected abstract void onGetAccountSuccess(Account account, long version);
 
-    private static class ResultType implements Jsonable {
+    public static class ResultType implements Jsonable {
         @JsonString(name="email")
         private String email;
         @JsonString(name="realName")

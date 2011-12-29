@@ -55,7 +55,7 @@ public abstract class LoginAPI extends AbstractServerAPI<LoginForm> {
     protected abstract void onLoginFailed();
     protected abstract void onSoftwareNeedUpdate();
 
-    private static class ResultType implements Jsonable {
+    public static class ResultType implements Jsonable {
         @JsonLong(name="accountId")
         private long accountId;
         @JsonLong(name="token")

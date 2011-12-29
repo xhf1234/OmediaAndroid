@@ -39,7 +39,7 @@ public abstract class GetFriendsAPI extends AbstractServerAPI<GetFriendsForm> {
 
     protected abstract void onSuccess(Account[] friends, long version);
 
-    private static class ResultType implements Jsonable {
+    public static class ResultType implements Jsonable {
         @JsonLong(name="version")
         private long version;
         @JsonArray(name="friends", type=Account.class)

@@ -38,7 +38,7 @@ public abstract class SearchFriendsAPI extends
 
     protected abstract void onSuccess(Account[] accounts);
 
-    private static class ResultType implements Jsonable {
+    public static class ResultType implements Jsonable {
         @JsonArray(name="friends", type=Account.class)
         private Account[] accounts;
     }

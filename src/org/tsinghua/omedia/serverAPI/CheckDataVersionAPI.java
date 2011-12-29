@@ -36,7 +36,7 @@ public abstract class CheckDataVersionAPI extends AbstractServerAPI<CheckDataVer
     
     protected abstract void onSuccess(long accountVersion, long friendRequestVersion, long friendsVersion);
 
-    private static class ResultType implements Jsonable {
+    public static class ResultType implements Jsonable {
         @JsonLong(name="account")
         private long accountVersion;
         @JsonLong(name="friendRequest")

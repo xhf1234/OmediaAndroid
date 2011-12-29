@@ -40,7 +40,7 @@ public abstract class GetFriendRequestAPI extends
 
     protected abstract void onSuccess(long version, FriendRequest[] requests);
     
-    private static class ResultType implements Jsonable {
+    public static class ResultType implements Jsonable {
         @JsonLong(name="version")
         private long version;
         @JsonArray(name="requests", type=FriendRequest.class)
