@@ -98,6 +98,7 @@ public class LandingActivity extends BaseActivity {
             preferences.setPassword(password.getText().toString());
         }
         //save accountId and token in MemDatasource
+        MemDataSource.clearData();
         dataSource.saveAccountId(accountId);
         dataSource.saveToken(token);
         //从服务端更新账户信息
@@ -115,9 +116,4 @@ public class LandingActivity extends BaseActivity {
         }.call();
     }
 
-    @Override
-    public void onResume() {
-        MemDataSource.clearData();
-        super.onResume();
-    }
 }

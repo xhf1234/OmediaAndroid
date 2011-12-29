@@ -114,4 +114,9 @@ public class JsonUtils {
         }
         return object;
     }
+    
+    public static <T extends Jsonable> T parseJsonObject(String json, Class<T> clazz) throws IOException {
+        JsonObject object = new JsonObject(read(json));
+        return parseJsonObject(object, clazz);
+    }
 }

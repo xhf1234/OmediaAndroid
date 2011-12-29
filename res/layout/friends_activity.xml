@@ -48,7 +48,7 @@
             <ListView
             	android:id="@+id/searchResult"
             	android:layout_width="fill_parent"
-            	android:layout_height="fill_parent" 
+            	android:layout_height="fill_parent"
             	android:layout_below="@id/searchText">
         	</ListView>
         
@@ -60,13 +60,10 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical" >
-
-        <ListView
-            android:id="@+id/searchResult"
+        <WebView
+            android:id="@+id/webView1"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
-        </ListView>
-
+            android:layout_height="fill_parent" />
     </LinearLayout>
 
 </FrameLayout>

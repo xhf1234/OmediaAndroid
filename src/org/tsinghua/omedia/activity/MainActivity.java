@@ -59,6 +59,12 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        WorkerManager.getInstance().stopWorkers();
+        super.onBackPressed();
+    }
+
+    @Override
     public void onEventCatch(Event event) {
         if(event instanceof FriendRequestUpdateEvent) {
             updateUI();
