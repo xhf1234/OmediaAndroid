@@ -1,13 +1,16 @@
 package org.tsinghua.omedia.worker;
 
 import org.tsinghua.omedia.data.Account;
+import org.tsinghua.omedia.data.Config;
 import org.tsinghua.omedia.data.FriendRequest;
 import org.tsinghua.omedia.form.CheckDataVersionForm;
 import org.tsinghua.omedia.form.GetAccountForm;
+import org.tsinghua.omedia.form.GetConfigForm;
 import org.tsinghua.omedia.form.GetFriendRequestForm;
 import org.tsinghua.omedia.form.GetFriendsForm;
 import org.tsinghua.omedia.serverAPI.CheckDataVersionAPI;
 import org.tsinghua.omedia.serverAPI.GetAccountAPI;
+import org.tsinghua.omedia.serverAPI.GetConfigAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendRequestAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendsAPI;
 
@@ -27,21 +30,26 @@ public class CheckDataUpdateWorker extends SyncWorker {
         long accountVersion = dataSource.getAccountVersion();
         long friendRequestVersion = dataSource.getFriendRequestVersion();
         long friendsVersion = dataSource.getFriendsVersion();
+        long configVersion = dataSource.getConfigVersion();
+        long ccnFileVersion = dataSource.getCcnFileVersion();
         CheckDataVersionForm form = new CheckDataVersionForm();
         form.setAccountId(accountId);
         form.setToken(token);
         form.setAccountVersion(accountVersion);
         form.setFriendRequestVersion(friendRequestVersion);
         form.setFriendsVersion(friendsVersion);
+        form.setCcnFileVersion(ccnFileVersion);
+        form.setConfigVersion(configVersion);
         new CheckDataVersionAPI(form, omediaConsole) {
             
             @Override
             protected void onSuccess(long accountVersion, long friendRequestVersion,
-                    long friendsVersion) {
+                    long friendsVersion, long configVersion, long ccnFileVersion) {
                 long oldAccountVersion = dataSource.getAccountVersion();
                 long oldFriendRequestVersion = dataSource.getFriendRequestVersion();
                 long oldFriendsVersion = dataSource.getFriendsVersion();
-                
+                long oldConfigVersion = dataSource.getConfigVersion();
+                long oldCcnFileVersion = dataSource.getCcnFileVersion();
                 //若客户端版本号与服务端版本号不同， 更新数据
                 if(oldAccountVersion != accountVersion) {
                     updateAccount();
@@ -51,6 +59,12 @@ public class CheckDataUpdateWorker extends SyncWorker {
                 }
                 if(oldFriendsVersion != friendsVersion) {
                     updateFriends();
+                }
+                if(oldConfigVersion != configVersion) {
+                    updateConfig();
+                }
+                if(oldCcnFileVersion != ccnFileVersion) {
+                    updateCcnFiles();
                 }
             }
         }.call();
@@ -102,5 +116,25 @@ public class CheckDataUpdateWorker extends SyncWorker {
                 dataSource.setFriendsVersion(version);
             }
         }.call();
+    }
+    
+    private void updateConfig() {
+        long accountId = dataSource.getAccountId();
+        long token = dataSource.getToken();
+        GetConfigForm form = new GetConfigForm();
+        form.setAccountId(accountId);
+        form.setToken(token);
+        new GetConfigAPI(form, omediaConsole) {
+            @Override
+            protected void onSuccess(long version, Config config) {
+                dataSource.setConfigVersion(version);
+                dataSource.setConfig(config);
+            }
+            
+        }.call();
+    }
+    
+    private void updateCcnFiles() {
+        //TODO
     }
 }

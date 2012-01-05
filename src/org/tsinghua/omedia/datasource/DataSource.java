@@ -2,6 +2,7 @@ package org.tsinghua.omedia.datasource;
 
 import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.data.Account;
+import org.tsinghua.omedia.data.Config;
 import org.tsinghua.omedia.data.FriendRequest;
 import org.tsinghua.omedia.datasource.db.DataBase;
 import org.tsinghua.omedia.event.FriendRequestUpdateEvent;
@@ -105,6 +106,20 @@ public class DataSource {
     public void setFriendsVersion(long friendsVersion) {
         getPreference().setFriendsVersion(friendsVersion);
     }
+    public long getConfigVersion() {
+        return getPreference().getConfigVersion();
+    }
+    
+    public void setConfigVersion(long version) {
+        getPreference().setConfigVersion(version);
+    }
+    public long getCcnFileVersion() {
+        return getPreference().getCcnFileVersion();
+    }
+    
+    public void setCcnFileVersion(long version) {
+        getPreference().setCcnFileVersion(version);
+    }
     
     public String[] getCcnFiles() {
         WorkerManager.getInstance().getCcnWorker().waitingForData();
@@ -116,11 +131,11 @@ public class DataSource {
     }
     
     public String getCcnHost() {
-        return "166.111.137.72";
+        return getConfig().getCcnHost();
     }
     
-    public String getCcnUri() {
-        return "ccnx:/node1";
+    public String getCcnUrl() {
+        return getConfig().getCcnUrl();
     }
     
     public FriendRequest[] getFriendRequests() {
@@ -139,6 +154,14 @@ public class DataSource {
     
     public void saveFriends(Account[] friends) {
         getMemDataSource().setFriends(friends);
+    }
+    
+    public void setConfig(Config config) {
+        getMemDataSource().setConfig(config);
+    }
+    
+    public Config getConfig() {
+        return getMemDataSource().getConfig();
     }
     
     public OmediaPreference getPreference() {

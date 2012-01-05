@@ -2,6 +2,11 @@ package org.tsinghua.omedia.form;
 
 import org.tsinghua.omedia.annotation.form.HttpParam;
 
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
 public class CheckDataVersionForm extends BaseForm {
     @HttpParam(name="accountVersion")
     private long accountVersion;
@@ -9,6 +14,10 @@ public class CheckDataVersionForm extends BaseForm {
     private long friendRequestVersion;
     @HttpParam(name="friendsVersion")
     private long friendsVersion;
+    @HttpParam(name="ccnFileVersion")
+    private long ccnFileVersion;
+    @HttpParam(name="configVersion")
+    private long configVersion;
     
     public long getAccountVersion() {
         return accountVersion;
@@ -27,6 +36,18 @@ public class CheckDataVersionForm extends BaseForm {
     }
     public void setFriendsVersion(long friendsVersion) {
         this.friendsVersion = friendsVersion;
+    }
+    public long getCcnFileVersion() {
+        return ccnFileVersion;
+    }
+    public void setCcnFileVersion(long ccnFileVersion) {
+        this.ccnFileVersion = ccnFileVersion;
+    }
+    public long getConfigVersion() {
+        return configVersion;
+    }
+    public void setConfigVersion(long configVersion) {
+        this.configVersion = configVersion;
     }
     
 }

@@ -1,8 +1,10 @@
 package org.tsinghua.omedia.datasource;
 
 import org.tsinghua.omedia.data.Account;
+import org.tsinghua.omedia.data.Config;
 import org.tsinghua.omedia.data.EmptyInstance;
 import org.tsinghua.omedia.data.FriendRequest;
+import org.tsinghua.omedia.tool.Logger;
 
 
 /**
@@ -12,11 +14,14 @@ import org.tsinghua.omedia.data.FriendRequest;
  *
  */
 public class MemDataSource {
+    private Logger logger = Logger.getLogger(MemDataSource.class);
+    
     private Long accountId;
     private long token;
     private String[] ccnFiles = EmptyInstance.EMPTY_STRINGS;
     private FriendRequest[] friendRequests = EmptyInstance.EMPTY_FRIEND_REQUESTS;
-    private Account[] friends = EmptyInstance.EMPTY_FRIENDS; 
+    private Account[] friends = EmptyInstance.EMPTY_FRIENDS;
+    private Config config;
     
     private static MemDataSource me;
     
@@ -89,4 +94,23 @@ public class MemDataSource {
     public void setFriends(Account[] friends) {
         this.friends = friends;
     }
+
+    public Config getConfig() {
+        if(config == null) {
+            synchronized (this) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    logger.error(e);
+                }
+            }
+        }
+        return config;
+    }
+
+    public synchronized void setConfig(Config config) {
+        this.config = config;
+        this.notifyAll();
+    }
+    
 }

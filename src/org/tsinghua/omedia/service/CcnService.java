@@ -22,6 +22,11 @@ import org.tsinghua.omedia.tool.Logger;
 
 import android.os.AsyncTask;
 
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
 public class CcnService {
     private static final Logger logger = Logger.getLogger(CcnService.class);
     
@@ -46,9 +51,9 @@ public class CcnService {
      * @return
      */
     public LsrepoTask syncCcnData() {
-        String uri = DataSource.getInstance().getCcnUri();
+        String url = DataSource.getInstance().getCcnUrl();
         LsrepoTask task = new LsrepoTask();
-        task.execute(uri);
+        task.execute(url);
         return task;
     }
     
@@ -58,7 +63,7 @@ public class CcnService {
             @Override
             protected Throwable doInBackground(Void... params) {
                 try {
-                    String uri = DataSource.getInstance().getCcnUri();
+                    String uri = DataSource.getInstance().getCcnUrl();
                     ContentName name = ContentName.fromURI(uri+"/"+ccnFile);
                     CCNHandle handle = CCNHandle.open();
                     String filePath = CcnFileDatasource.getInstance()
