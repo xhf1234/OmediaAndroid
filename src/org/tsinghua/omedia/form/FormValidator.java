@@ -10,6 +10,11 @@ import org.tsinghua.omedia.annotation.form.Size;
 import org.tsinghua.omedia.tool.Logger;
 import org.tsinghua.omedia.tool.StringUtils;
 
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
 public class FormValidator {
     private static final Logger logger = Logger.getLogger(FormValidator.class);
     

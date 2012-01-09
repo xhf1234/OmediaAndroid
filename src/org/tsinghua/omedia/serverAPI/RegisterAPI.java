@@ -35,6 +35,14 @@ public abstract class RegisterAPI extends AbstractServerAPI<RegisterForm> {
                 omediaActivity.showAlertDialog(R.string.username_exist);
             }
         });
+        registerResultCodeListener(ResultCode.SUCCESS,
+                new ResultCodeListener<EmptyInstance.EmptyResultType>(EmptyResultType.class) {
+
+            @Override
+            protected void innerRun(EmptyResultType result) {
+                onSuccess();
+            }
+        });
     }
     
     protected abstract void onSuccess();
