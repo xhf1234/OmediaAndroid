@@ -61,6 +61,7 @@ public class FormValidator {
                         SameTo anno = e.getAnnotation(SameTo.class);
                         String name = anno.name();
                         Field referenceField = clazz.getDeclaredField(name);
+                        referenceField.setAccessible(true);
                         Object referenceObject = referenceField.get(form);
                         if(!value.equals(referenceObject)) {
                             return anno.msg();

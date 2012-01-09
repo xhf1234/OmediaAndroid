@@ -11,9 +11,10 @@ import org.tsinghua.omedia.form.RegisterForm;
 /**
  * 
  * @author xuhongfeng
- *
+ * 
  */
 public abstract class RegisterAPI extends AbstractServerAPI<RegisterForm> {
+
 
     
     protected RegisterAPI(RegisterForm form, OmediaActivityIntf omediaActivity) {
@@ -46,4 +47,6 @@ public abstract class RegisterAPI extends AbstractServerAPI<RegisterForm> {
     }
     
     protected abstract void onSuccess();
+
+	
 }

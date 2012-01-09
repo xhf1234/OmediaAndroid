@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center" >
+
+    <TableRow
+        android:layout_width="180dip"
+        android:layout_height="200dip"
+        android:gravity="center"
+        android:padding="10dip" >
+
+        <Button
+            android:id="@+id/registerButton"
+            android:layout_width="fill_parent"
+            android:layout_height="150dip"
+            android:background="#7f2B2B2B"
+            android:text="@string/register"
+            android:textColor="#FF0000"
+            android:textSize="14pt" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="200dip"
+        android:layout_height="200dip"
+        android:gravity="center"
+        android:padding="10dip" >
+
+        <Button
+            android:id="@+id/showButton"
+            android:layout_width="200dip"
+            android:layout_height="150dip"
+            android:background="#7f2B2B2B"
+            android:text="@string/showsomething"
+            android:textColor="#FF0000"
+            android:textSize="14pt" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="200dip"
+        android:layout_height="200dip"
+        android:gravity="center"
+        android:padding="10dip" >
+
+        <Button
+            android:id="@+id/touchmeButton"
+            android:layout_width="200dip"
+            android:layout_height="150dip"
+            android:background="#7f2B2B2B"
+            android:text="@string/touchme"
+            android:textColor="#FF0000"
+            android:textSize="14pt" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="2000dip"
+        android:layout_height="200dip"
+        android:gravity="center"
+        android:padding="10dip" 
+        >
+
+        <Button
+            android:id="@+id/positionButton"
+            android:layout_width="200dip"
+            android:layout_height="150dip"
+            android:background="#7f2B2B2B"
+            android:text="@string/position"
+            android:textColor="#FF0000"
+            android:textSize="14pt" />
+    </TableRow>
+
+</TableLayout>

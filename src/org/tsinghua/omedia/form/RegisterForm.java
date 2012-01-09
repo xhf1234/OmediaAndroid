@@ -38,7 +38,8 @@ public class RegisterForm extends AbstractForm {
     @HttpParam(name="omediaVersion")
     private String omediaVersion = OmediaConst.OmediaVersion;
     
-    public String getUsername() {
+  
+	public String getUsername() {
         return username;
     }
     public void setUsername(String username) {
