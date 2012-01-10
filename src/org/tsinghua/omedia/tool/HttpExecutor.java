@@ -8,14 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
+
+import android.net.http.AndroidHttpClient;
 
 /**
  * 封装了HTTP的GET操作和POST操作
@@ -93,47 +94,34 @@ public class HttpExecutor {
         }
         String uri = sb.toString();
         logger.info("http get,uri = " + uri);
-        GetMethod method = new GetMethod(uri);
-        method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-                new DefaultHttpMethodRetryHandler());
+        HttpGet request = new HttpGet(uri);
+        AndroidHttpClient client = AndroidHttpClient.newInstance("apache-client");
         try {
-            HttpClient client = new HttpClient();
-            int statusCode = client.executeMethod(method);
-            if(statusCode != HttpStatus.SC_OK) {
-                throw new IOException("http status code = " + statusCode);
+            HttpResponse response = client.execute(request);
+            if(response.getStatusLine().getStatusCode()  != HttpStatus.SC_OK) {
+                throw new IOException("http status code = " + response.getStatusLine().getStatusCode());
             }
-            return method.getResponseBodyAsString();
+            return IOUtils.toString(response.getEntity().getContent());
         } finally {
-            method.releaseConnection();
+            client.close();
         }
     }
 
     private String innerHttpPost() throws IOException {
-        PostMethod postMethod = new PostMethod(url);
+        HttpPost request = new HttpPost(url);
         List<NameValuePair> datas = new ArrayList<NameValuePair>();
         Set<String> keys = params.keySet();
         for(String key:keys) {
             String value = params.get(key);
-            datas.add(new NameValuePair(key,value));
+            datas.add(new BasicNameValuePair(key,value));
         }
-        postMethod.setRequestBody(datas.toArray(new NameValuePair[0]));
-        HttpClient client = new HttpClient();
+        request.setEntity(new UrlEncodedFormEntity(datas));
+        AndroidHttpClient client = AndroidHttpClient.newInstance("apache-client");
         try {
-            int statusCode = client.executeMethod(postMethod);
-            if (statusCode == HttpStatus.SC_MOVED_PERMANENTLY
-                    || statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
-                Header locationHeader = postMethod.getResponseHeader("location");
-                String location = null;
-                if (locationHeader != null) {
-                    location = locationHeader.getValue();
-                    logger.error("The page was redirected to:" + location);
-                } else {
-                    logger.error("Location field value is null.");
-                }
-            }
-            return String.valueOf(statusCode);
+            HttpResponse response = client.execute(request);
+            return IOUtils.toString(response.getEntity().getContent());
         } finally {
-            postMethod.releaseConnection();
+            client.close();
         }
     }
 }
