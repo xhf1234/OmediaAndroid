@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    >
+
+    <!-- 顶部工具栏  对齐顶部 -->
+
+    <GridView
+        android:id="@+id/lvFileList"
+        android:layout_width="fill_parent"
+        android:layout_height="630dip"
+        android:layout_alignParentTop="true"
+        android:columnWidth="80dp"
+        android:gravity="center"
+        android:horizontalSpacing="20dp"
+        android:numColumns="auto_fit"
+        android:padding="25dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" 
+        />
+
+    <RelativeLayout
+        xmlns:Android="http://schemas.android.com/apk/res/android"
+        Android:layout_width="fill_parent"
+        Android:layout_height="match_parent"
+         >
+
+        <include layout="@layout/filebrowser_top" />
+    </RelativeLayout>
+
+</LinearLayout>

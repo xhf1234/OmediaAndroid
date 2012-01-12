@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#77774477"
+     >
+
+    <TextView
+        android:id="@+id/filebrower_path"
+        android:layout_width="880dip"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:textSize="13pt" 
+        android:background="#2b2b2b"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_toRightOf="@id/filebrower_path"
+        android:orientation="horizontal"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/filebrower_back"
+            android:layout_width="150dip"
+            android:layout_height="80dip"
+            android:src="#2b2b2b"
+            
+            android:text="@string/filebrower_back"
+            android:textSize="15pt" >
+        </Button>
+
+        <Button
+            android:id="@+id/filebrower_close"
+            android:layout_width="150dip"
+            android:layout_height="80dip"
+            android:src="#2b2b2b"
+            android:layout_marginLeft="10dip"
+            android:text="@string/filebrower_close"
+            android:textSize="15pt" >
+        </Button>
+    </LinearLayout>
+
+</RelativeLayout>
