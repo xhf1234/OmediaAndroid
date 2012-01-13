@@ -1,4 +1,4 @@
-package org.tsinghua.omedia.ui.camera;
+package org.tsinghua.omedia.ui;
 
 import java.io.IOException;
 
@@ -15,17 +15,16 @@ import android.view.SurfaceView;
  * @author hanfuye
  * 
  */
-public class CameraPreview extends SurfaceView implements
-		SurfaceHolder.Callback {
+public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+    private static final Logger logger = Logger
+            .getLogger(LandingActivity.class);
+    
 	private SurfaceHolder mHolder;
 	private Camera mcamera;
-	private static final Logger logger = Logger
-			.getLogger(LandingActivity.class);
 
 	public CameraPreview(Context context, Camera camera) {
 		super(context);
 		mcamera = camera;
-		// camera.setPreviewCallback(new FrameCall());
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -45,7 +44,7 @@ public class CameraPreview extends SurfaceView implements
 			mcamera.setPreviewDisplay(mHolder);
 			mcamera.startPreview();
 		} catch (Exception e) {
-			logger.error("Error starting camera preview: " + e.getMessage());
+			logger.error("Error starting camera preview: ", e);
 		}
 	}
 
@@ -55,7 +54,7 @@ public class CameraPreview extends SurfaceView implements
 			mcamera.setPreviewDisplay(holder);
 			mcamera.startPreview();
 		} catch (IOException e) {
-			logger.error( "Error setting camera preview:" + e.getMessage());
+			logger.error( "Error setting camera preview:", e);
 		}
 
 	}

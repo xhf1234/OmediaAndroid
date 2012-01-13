@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.tsinghua.omedia.R;
-import org.tsinghua.omedia.file.FileInfo;
-import org.tsinghua.omedia.file.FileInfoAdapter;
+import org.tsinghua.omedia.ui.fileBrowser.FileInfo;
+import org.tsinghua.omedia.ui.fileBrowser.FileInfoAdapter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,6 +21,11 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author hanfuye
+ *
+ */
 public class FileBrowerAcitvity extends BaseActivity {
 
 	private ArrayList<FileInfo> listItem;
@@ -61,10 +66,7 @@ public class FileBrowerAcitvity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setClass(FileBrowerAcitvity.this, CcnActivity.class);
-				startActivity(intent);
-				FileBrowerAcitvity.this.finish();
+			    onBackPressed();
 			}
 		});
 	}

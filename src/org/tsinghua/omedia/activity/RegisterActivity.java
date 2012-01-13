@@ -8,7 +8,7 @@ import org.tsinghua.omedia.R.id;
 import org.tsinghua.omedia.form.RegisterForm;
 import org.tsinghua.omedia.serverAPI.RegisterAPI;
 import org.tsinghua.omedia.tool.Logger;
-import org.tsinghua.omedia.ui.camera.CameraPreview;
+import org.tsinghua.omedia.ui.CameraPreview;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;

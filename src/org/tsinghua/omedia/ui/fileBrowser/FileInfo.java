@@ -1,4 +1,4 @@
-package org.tsinghua.omedia.file;
+package org.tsinghua.omedia.ui.fileBrowser;
 
 import java.io.File;
 

@@ -1,16 +1,18 @@
 package org.tsinghua.omedia.ui;
 
 import org.tsinghua.omedia.R;
-import org.tsinghua.omedia.datasource.DataSource;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
+/**
+ * 
+ * @author hanfuye
+ *
+ */
 public class CcnFilesFragment extends Fragment {
 
 	@Override
