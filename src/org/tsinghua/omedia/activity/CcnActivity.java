@@ -1,55 +1,65 @@
 package org.tsinghua.omedia.activity;
 
 import org.tsinghua.omedia.R;
-import org.tsinghua.omedia.datasource.DataSource;
+import org.tsinghua.omedia.event.CcnFilesUpdateEvent;
+import org.tsinghua.omedia.event.Event;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
 public class CcnActivity extends BaseActivity {
+    private ListView listView;
 
-	private String[] ccnFiles ;
-	ListView filelist;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.ccn_activity);
+        listView = (ListView) findViewById(R.id.filelist);
+        initListener();
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.ccn_activity);
-		filelist = (ListView) findViewById(R.id.filelist);
-		initdata();
-		initListenner();
-	}
+    private void initListener() {
+        findViewById(R.id.selectfile_button).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CcnActivity.this, FileBrowerAcitvity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
-	private void initListenner() {
-		Button selectfile = (Button) findViewById(R.id.selectfile_button);
-		selectfile.setOnClickListener(new OnClickListener() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
 
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent();
-				i.setClass(CcnActivity.this, FileBrowerAcitvity.class);
-				startActivity(i);
-			}
-		});
-	}
+    private void updateUI() {
+        //TODO for FuYe
+        String[] files = new String[dataSource.getCcnFiles().length];
+        for(int i=0; i<files.length; i++) {
+            files[i] = dataSource.getCcnFiles()[i].getCcnname();
+        }
+        listView.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, files));
+    }
 
-	private void initdata() {
-		ccnFiles = DataSource.getInstance().getCcnFiles();
+    @Override
+    public void onEventCatch(Event event) {
+        if(event instanceof CcnFilesUpdateEvent) {
+            updateUI();
+        }
+        super.onEventCatch(event);
+    }
 
-		if (ccnFiles == null) {
-			return;
-		}
-
-		filelist.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, ccnFiles));
-	}
-
-	private void show_waiting() {
-		// TODO
-	}
+    
 }

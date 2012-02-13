@@ -9,8 +9,6 @@ public class WorkerManager {
     
     private static WorkerManager me;
     
-    private CcnWorker ccnWorker;
-    
     private CheckDataUpdateWorker checkDataUpdateWorker;
     
     private WorkerManager(){}
@@ -26,10 +24,6 @@ public class WorkerManager {
     }
     
     public void startWorkers() {
-        if(ccnWorker == null) {
-            ccnWorker = new CcnWorker(1000L);
-            ccnWorker.start();
-        }
         if(checkDataUpdateWorker == null) {
             checkDataUpdateWorker = new CheckDataUpdateWorker();
             checkDataUpdateWorker.start();
@@ -37,13 +31,8 @@ public class WorkerManager {
     }
     
     public void stopWorkers() {
-        ccnWorker.stop();
-        ccnWorker = null;
         checkDataUpdateWorker.stop();
         checkDataUpdateWorker = null;
     }
 
-    public CcnWorker getCcnWorker() {
-        return ccnWorker;
-    }
 }

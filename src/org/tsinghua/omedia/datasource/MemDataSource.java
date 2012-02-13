@@ -1,6 +1,7 @@
 package org.tsinghua.omedia.datasource;
 
 import org.tsinghua.omedia.data.Account;
+import org.tsinghua.omedia.data.CcnFile;
 import org.tsinghua.omedia.data.Config;
 import org.tsinghua.omedia.data.EmptyInstance;
 import org.tsinghua.omedia.data.FriendRequest;
@@ -18,10 +19,10 @@ public class MemDataSource {
     
     private Long accountId;
     private long token;
-    private String[] ccnFiles = EmptyInstance.EMPTY_STRINGS;
     private FriendRequest[] friendRequests = EmptyInstance.EMPTY_FRIEND_REQUESTS;
     private Account[] friends = EmptyInstance.EMPTY_FRIENDS;
     private Config config;
+    private CcnFile[] ccnFiles = EmptyInstance.EMPTY_CCN_FILES;
     
     private static MemDataSource me;
     
@@ -71,11 +72,11 @@ public class MemDataSource {
         token = -1L;
     }
 
-    public String[] getCcnFiles() {
+    public CcnFile[] getCcnFiles() {
         return ccnFiles;
     }
 
-    public void setCcnFiles(String[] ccnFiles) {
+    public void setCcnFiles(CcnFile[] ccnFiles) {
         this.ccnFiles = ccnFiles;
     }
 

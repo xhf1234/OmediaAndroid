@@ -1,6 +1,7 @@
 package org.tsinghua.omedia.worker;
 
 import org.tsinghua.omedia.data.Account;
+import org.tsinghua.omedia.data.CcnFile;
 import org.tsinghua.omedia.data.Config;
 import org.tsinghua.omedia.data.FriendRequest;
 import org.tsinghua.omedia.form.CheckDataVersionForm;
@@ -8,11 +9,13 @@ import org.tsinghua.omedia.form.GetAccountForm;
 import org.tsinghua.omedia.form.GetConfigForm;
 import org.tsinghua.omedia.form.GetFriendRequestForm;
 import org.tsinghua.omedia.form.GetFriendsForm;
+import org.tsinghua.omedia.form.ShowCcnFilesForm;
 import org.tsinghua.omedia.serverAPI.CheckDataVersionAPI;
 import org.tsinghua.omedia.serverAPI.GetAccountAPI;
 import org.tsinghua.omedia.serverAPI.GetConfigAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendRequestAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendsAPI;
+import org.tsinghua.omedia.serverAPI.ShowCcnFilesAPI;
 
 /**
  * 调用服务端接口获得各种数据的版本号如accountVersion, friendsVersion
@@ -128,13 +131,24 @@ public class CheckDataUpdateWorker extends SyncWorker {
             @Override
             protected void onSuccess(long version, Config config) {
                 dataSource.setConfigVersion(version);
-                dataSource.setConfig(config);
+                dataSource.saveConfig(config);
             }
             
         }.call();
     }
     
     private void updateCcnFiles() {
-        //TODO
+        long accountId = dataSource.getAccountId();
+        long token = dataSource.getToken();
+        ShowCcnFilesForm form = new ShowCcnFilesForm();
+        form.setAccountId(accountId);
+        form.setToken(token);
+        new ShowCcnFilesAPI(form, omediaConsole) {
+            @Override
+            protected void onSuccess(long version, CcnFile[] ccnFiles) {
+                dataSource.saveCcnFiles(ccnFiles);
+                dataSource.setCcnFileVersion(version);
+            }
+        }.call();
     }
 }

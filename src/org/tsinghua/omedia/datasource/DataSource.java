@@ -2,11 +2,12 @@ package org.tsinghua.omedia.datasource;
 
 import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.data.Account;
+import org.tsinghua.omedia.data.CcnFile;
 import org.tsinghua.omedia.data.Config;
 import org.tsinghua.omedia.data.FriendRequest;
 import org.tsinghua.omedia.datasource.db.DataBase;
+import org.tsinghua.omedia.event.CcnFilesUpdateEvent;
 import org.tsinghua.omedia.event.FriendRequestUpdateEvent;
-import org.tsinghua.omedia.worker.WorkerManager;
 
 /**
  * 数据源 封装一些存取数据的对象和方法
@@ -121,13 +122,14 @@ public class DataSource {
         getPreference().setCcnFileVersion(version);
     }
     
-    public String[] getCcnFiles() {
-        WorkerManager.getInstance().getCcnWorker().waitingForData();
+    public CcnFile[] getCcnFiles() {
         return getMemDataSource().getCcnFiles();
     }
     
-    public void setCcnFiles(String[] ccnFiles) {
+    public void saveCcnFiles(CcnFile[] ccnFiles) {
         getMemDataSource().setCcnFiles(ccnFiles);
+        OmediaApplication.getInstance().dispatchEvent(
+                new CcnFilesUpdateEvent());
     }
     
     public String getCcnHost() {
@@ -156,7 +158,7 @@ public class DataSource {
         getMemDataSource().setFriends(friends);
     }
     
-    public void setConfig(Config config) {
+    public void saveConfig(Config config) {
         getMemDataSource().setConfig(config);
     }
     

@@ -16,5 +16,7 @@ public class EmptyInstance {
     public static class EmptyResultType implements Jsonable {
         
     }
+    
+    public static CcnFile[] EMPTY_CCN_FILES = new CcnFile[0];
 
 }
