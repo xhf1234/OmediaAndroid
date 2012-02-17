@@ -61,5 +61,7 @@
     <string name="filebrower_back">上一层</string>
     <string name="filebrower_close">关闭</string>
     <string name="makesure">确定上传：</string>
+    
+    <string name="waiting">稍等。。。</string>
 
 </resources>

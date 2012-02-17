@@ -7,29 +7,45 @@ import org.tsinghua.omedia.tool.Logger;
  * @author xuhongfeng
  *
  */
-public abstract class SyncWorker extends Worker {
-    private static final Logger logger = Logger.getLogger(SyncWorker.class);
+public abstract class LoopWorker extends Worker {
+    private static final Logger logger = Logger.getLogger(LoopWorker.class);
+    
+    private static final long DEFAULT_INTERVAL = 20*1000L;
     
     private boolean gotData =false;
     
     private long interval;
     
-    private static final long DEFAULT_INTERVAL = 20*1000L;
+    private static final int LOOP_INFINITE = -99999;
+    private int loopTime = LOOP_INFINITE;
     
-    protected abstract void singleRun();
-    
-    public SyncWorker() {
-        this(DEFAULT_INTERVAL);
+    public LoopWorker() {
+        this(LOOP_INFINITE, DEFAULT_INTERVAL);
     }
 
-    public SyncWorker(long interval) {
+    public LoopWorker(long interval) {
+    	this(LOOP_INFINITE, interval);
+    }
+    
+    public LoopWorker(int loopTime) {
+    	this(loopTime, DEFAULT_INTERVAL);
+    }
+    
+    public LoopWorker(int loopTime, long interval) {
         super();
         this.interval = interval;
+    	this.loopTime = loopTime;
     }
 
     @Override
     protected void innerRun() {
         while(running) {
+        	if(loopTime != LOOP_INFINITE) {
+        		if(loopTime <= 0) {
+        			break;
+        		}
+        		loopTime --;
+        	}
             try {
                 singleRun();
                 gotData = true;
@@ -52,4 +68,6 @@ public abstract class SyncWorker extends Worker {
             }
         }
     }
+    
+    protected abstract void singleRun();
 }

@@ -13,7 +13,13 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
 public class OmediaActivityDelegate {
+	
     public static void showAlertDialog(String message, Activity activity) {
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
         Fragment prev = activity.getFragmentManager().findFragmentByTag("alertDialog");

@@ -3,7 +3,6 @@ package org.tsinghua.omedia.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.ccnx.android.ccnlib.CCNxConfiguration;
 import org.ccnx.android.ccnlib.CCNxServiceControl;
@@ -12,8 +11,6 @@ import org.ccnx.ccn.impl.CCNNetworkManager.NetworkProtocol;
 import org.ccnx.ccn.io.CCNInputStream;
 import org.ccnx.ccn.profiles.ccnd.FaceManager;
 import org.ccnx.ccn.profiles.ccnd.PrefixRegistrationManager;
-import org.ccnx.ccn.profiles.nameenum.BasicNameEnumeratorListener;
-import org.ccnx.ccn.profiles.nameenum.CCNNameEnumerator;
 import org.ccnx.ccn.protocol.ContentName;
 import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.datasource.DataSource;
@@ -46,29 +43,22 @@ public class CcnService {
     
     private CCNxServiceControl ccnd;
     
-    /**
-     * 
-     * @return
-     */
-    public LsrepoTask syncCcnData() {
-        String url = DataSource.getInstance().getCcnUrl();
-        LsrepoTask task = new LsrepoTask();
-        task.execute(url);
-        return task;
-    }
-    
     public void ccnGetFile(final String ccnFile) throws IOException {
         AsyncTask<Void, Void, Throwable> task = new AsyncTask<Void, Void, Throwable>() {
 
             @Override
             protected Throwable doInBackground(Void... params) {
+                File file = null;
                 try {
+                    if(!isCcnRunning()) {
+                        throw new Exception("ccnd is not running");
+                    }
                     String uri = DataSource.getInstance().getCcnUrl();
                     ContentName name = ContentName.fromURI(uri+"/"+ccnFile);
                     CCNHandle handle = CCNHandle.open();
                     String filePath = CcnFileDatasource.getInstance()
                             .getAbsolutePath(ccnFile);
-                    File file = new File(filePath);
+                    file = new File(filePath);
                     FileOutputStream fos = null;
                     CCNInputStream input = null;
                     try {
@@ -88,6 +78,9 @@ public class CcnService {
                         }
                     }
                 } catch (Throwable e) {
+                    if(file != null) {
+                        file.delete();
+                    }
                     return e;
                 }
                 return null;
@@ -150,52 +143,4 @@ public class CcnService {
         return ccnd;
     }
     
-    public class LsrepoTask extends AsyncTask<String, String, Void >
-            implements BasicNameEnumeratorListener {
-        
-        private String[] ccnFiles;
-
-        @Override
-        protected synchronized Void doInBackground(String... params) {
-            CCNHandle handle = null;
-            try {
-                if(!isCcnRunning()) {
-                    throw new Exception("ccnd is not running");
-                }
-                ContentName name = ContentName.fromURI(params[0]);
-                handle = CCNHandle.open();
-                CCNNameEnumerator ccnNE = new CCNNameEnumerator(handle,this);
-                ccnNE.registerPrefix(name);
-                this.wait();
-                ccnNE.cancelPrefix(name);
-            } catch (Throwable e) {
-                logger.error(e);
-                ccnd = null;
-            } finally {
-                if(handle != null) {
-                    handle.close();
-                }
-            }
-            return null;
-        }
-        
-        public String[] getCcnFiles() {
-            return ccnFiles;
-        }
-        
-        public synchronized void stop() {
-            this.notifyAll();
-        }
-
-        @Override
-        public synchronized int handleNameEnumerator(ContentName prefix,
-                ArrayList<ContentName> names) {
-            String[] ccnFiles = new String[names.size()];
-            for(int i=0; i<ccnFiles.length; i++) {
-                ccnFiles[i] = names.get(i).toString();
-            }
-            this.ccnFiles = ccnFiles;
-            return names.size();
-        }
-    }
 }

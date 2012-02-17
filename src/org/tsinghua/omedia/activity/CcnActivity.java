@@ -1,15 +1,26 @@
 package org.tsinghua.omedia.activity;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.tsinghua.omedia.R;
+import org.tsinghua.omedia.datasource.sdcard.CcnFileDatasource;
 import org.tsinghua.omedia.event.CcnFilesUpdateEvent;
 import org.tsinghua.omedia.event.Event;
+import org.tsinghua.omedia.tool.Logger;
+import org.tsinghua.omedia.worker.MultipartWorker;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * 
@@ -17,6 +28,8 @@ import android.widget.ListView;
  *
  */
 public class CcnActivity extends BaseActivity {
+    private static final Logger logger = Logger.getLogger(BaseActivity.class);
+    
     private ListView listView;
 
     @Override
@@ -32,11 +45,11 @@ public class CcnActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CcnActivity.this, FileBrowerAcitvity.class);
-                startActivity(intent);
+                startActivityForResult(intent, RequestCode.CCN_SELECT_FILE);
             }
         });
     }
-
+    
     @Override
     public void onResume() {
         super.onResume();
@@ -44,22 +57,84 @@ public class CcnActivity extends BaseActivity {
     }
 
     private void updateUI() {
-        //TODO for FuYe
         String[] files = new String[dataSource.getCcnFiles().length];
         for(int i=0; i<files.length; i++) {
             files[i] = dataSource.getCcnFiles()[i].getCcnname();
         }
-        listView.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, files));
+        listView.setAdapter(new CcnListAdapter(this, files));
     }
 
     @Override
     public void onEventCatch(Event event) {
         if(event instanceof CcnFilesUpdateEvent) {
             updateUI();
+            dismissDialog(DIALOG_WAITING);
         }
         super.onEventCatch(event);
     }
 
+
+    private class CcnListAdapter extends ArrayAdapter<String> {
+        private LayoutInflater inflater;
+        private String[] files;
+
+        public CcnListAdapter(Activity context, String[] files) {
+            super(context, R.layout.ccn_list_view_item, files);
+            this.files = files;
+            inflater = context.getLayoutInflater();
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            if(convertView == null) {
+                convertView = inflater.inflate(R.layout.ccn_list_view_item, parent, false);
+            }
+            TextView textView = (TextView) convertView.findViewById(R.id.ccn_file_name);
+            textView.setText(files[position]);
+            convertView.setOnClickListener(new OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    String ccnFile = files[position];
+                    try {
+                        File file = CcnFileDatasource.getInstance().getCcnFile(ccnFile);
+                        openFile(file);
+                    } catch (IOException e) {
+                        logger.error(e);
+                    }
+                }
+            });
+            return convertView;
+        }
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if(requestCode == RequestCode.CCN_SELECT_FILE && resultCode==RESULT_OK) {
+            Uri uri = intent.getData();
+            ccnPutFile(uri);
+        } else {
+            super.onActivityResult(requestCode, resultCode, intent);
+        }
+    }
+    
+    private void ccnPutFile(Uri fileUri) {
+    	File file = new File(fileUri.getPath());
+    	showDialog(DIALOG_WAITING);
+    	new MultipartWorker(file, file.getName()) {
+			
+			@Override
+			protected void onSuccess() {
+				checkDataUpdate();
+			}
+			
+			@Override
+			protected void onFailed(Exception e) {
+				logger.error(e);
+			}
+		}.start();
+    }
     
 }

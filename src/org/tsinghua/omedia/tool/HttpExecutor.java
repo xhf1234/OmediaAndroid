@@ -1,5 +1,7 @@
 package org.tsinghua.omedia.tool;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -8,15 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
-
-import android.net.http.AndroidHttpClient;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
 
 /**
  * 封装了HTTP的GET操作和POST操作
@@ -36,11 +38,12 @@ import android.net.http.AndroidHttpClient;
 public class HttpExecutor {
     private static Logger logger = Logger.getLogger(HttpExecutor.class);
     
-    private static enum METHOD_TYPE {POST, GET};
+    private static enum METHOD_TYPE {POST, GET, MULTIPART};
     
     private String url;
     private METHOD_TYPE type;
     private Map<String,String> params = new HashMap<String, String>();
+    private List<Part> multipart = new ArrayList<Part>();;
     
     private HttpExecutor(){};
     
@@ -53,17 +56,39 @@ public class HttpExecutor {
     
     public static HttpExecutor httpPost(String url) {
         HttpExecutor executor = new HttpExecutor();
-        executor.url = URLEncoder.encode(url);
+        executor.url = url;
         executor.type = METHOD_TYPE.POST;
         return executor;
     }
     
+    public static HttpExecutor postMultipart(String url) {
+        HttpExecutor executor = new HttpExecutor();
+        executor.url = url;
+        executor.type = METHOD_TYPE.MULTIPART;
+        return executor;
+    }
+    
     public HttpExecutor addParam(String key, String value) {
-        params.put(URLEncoder.encode(key), URLEncoder.encode(value));
+        if(this.type == METHOD_TYPE.MULTIPART) {
+            StringPart part = new StringPart(key, value);
+            multipart.add(part);
+        } else {
+            params.put(URLEncoder.encode(key), URLEncoder.encode(value));
+        }
         return this;
     }
     public HttpExecutor addParam(String key, long value) {
         return addParam(key, String.valueOf(value));
+    }
+    
+    public HttpExecutor addFilePart(String fileName, File file) throws FileNotFoundException {
+        if(this.type != METHOD_TYPE.MULTIPART) {
+            logger.error("not a multipart type");
+            throw new RuntimeException();
+        }
+        FilePart part = new FilePart(fileName, file);
+        multipart.add(part);
+        return this;
     }
     
     public String exec() throws IOException {
@@ -72,6 +97,9 @@ public class HttpExecutor {
             return new String(innerHttpGet().getBytes("ISO-8859-1"), "utf8");
         case POST :
             return new String(innerHttpPost().getBytes("ISO-8859-1"), "utf8");
+        case MULTIPART:
+            innerMultipart();
+            return null;
         default :  throw new IOException("unknow http type");
         }
     }
@@ -94,34 +122,35 @@ public class HttpExecutor {
         }
         String uri = sb.toString();
         logger.info("http get,uri = " + uri);
-        HttpGet request = new HttpGet(uri);
-        AndroidHttpClient client = AndroidHttpClient.newInstance("apache-client");
-        try {
-            HttpResponse response = client.execute(request);
-            if(response.getStatusLine().getStatusCode()  != HttpStatus.SC_OK) {
-                throw new IOException("http status code = " + response.getStatusLine().getStatusCode());
-            }
-            return IOUtils.toString(response.getEntity().getContent());
-        } finally {
-            client.close();
+        GetMethod request = new GetMethod(uri);
+        HttpClient client = HttpClientFactory.getNewInstance();
+        int statusCode = client.executeMethod(request);
+        if(statusCode  != HttpStatus.SC_OK) {
+            throw new IOException("http status code = " + statusCode);
         }
+        return request.getResponseBodyAsString();
     }
 
     private String innerHttpPost() throws IOException {
-        HttpPost request = new HttpPost(url);
+        PostMethod post = new PostMethod(url);
         List<NameValuePair> datas = new ArrayList<NameValuePair>();
         Set<String> keys = params.keySet();
         for(String key:keys) {
             String value = params.get(key);
-            datas.add(new BasicNameValuePair(key,value));
+            datas.add(new NameValuePair(key,value));
         }
-        request.setEntity(new UrlEncodedFormEntity(datas));
-        AndroidHttpClient client = AndroidHttpClient.newInstance("apache-client");
-        try {
-            HttpResponse response = client.execute(request);
-            return IOUtils.toString(response.getEntity().getContent());
-        } finally {
-            client.close();
-        }
+        post.addParameters(datas.toArray(new NameValuePair[0]));
+        HttpClient client = HttpClientFactory.getNewInstance();
+        client.executeMethod(post);
+        return post.getResponseBodyAsString();
+    }
+    
+    private void innerMultipart() throws IOException {
+        Part[] parts = multipart.toArray(new Part[0]);
+        PostMethod post = new PostMethod(url);
+        MultipartRequestEntity entity = new MultipartRequestEntity(parts, post.getParams());
+        post.setRequestEntity(entity);
+        HttpClient client = HttpClientFactory.getNewInstance();
+        client.executeMethod(post);
     }
 }

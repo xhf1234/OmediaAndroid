@@ -24,9 +24,17 @@ import org.tsinghua.omedia.serverAPI.ShowCcnFilesAPI;
  * @author xuhongfeng
  *
  */
-public class CheckDataUpdateWorker extends SyncWorker {
+public class CheckDataUpdateWorker extends LoopWorker {
     
-    @Override
+    public CheckDataUpdateWorker() {
+		super();
+	}
+
+	public CheckDataUpdateWorker(int loopTime) {
+		super(loopTime);
+	}
+
+	@Override
     protected void singleRun() {
         long accountId = dataSource.getAccountId();
         long token = dataSource.getToken();

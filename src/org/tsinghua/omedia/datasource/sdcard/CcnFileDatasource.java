@@ -5,6 +5,11 @@ import java.io.IOException;
 
 import org.tsinghua.omedia.service.CcnService;
 
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
 public class CcnFileDatasource extends AbstractSdcardDatasource {
     private static CcnFileDatasource me;
     

@@ -7,9 +7,8 @@ import org.tsinghua.omedia.R;
 import org.tsinghua.omedia.ui.fileBrowser.FileInfo;
 import org.tsinghua.omedia.ui.fileBrowser.FileInfoAdapter;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +18,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * 
@@ -77,48 +75,60 @@ public class FileBrowerAcitvity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				if (i != 0) {
-					i = i - 1;
-					inflateListView(root[i]);
-				} else {
-					Toast.makeText(FileBrowerAcitvity.this, "Sorry, now you are in \"\\\"",
-							Toast.LENGTH_SHORT).show();
+				if(!doBack()) {
+					FileBrowerAcitvity.this.onBackPressed();
 				}
 			}
 		});
 	}
+	
+	private boolean doBack() {
+		if (i != 0) {
+			i = i - 1;
+			inflateListView(root[i]);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+
+    @Override
+	public void onBackPressed() {
+    	if(!doBack()) {
+    		super.onBackPressed();
+    	}
+	}
 
 	private void gridview() {
-		gView = (GridView) findViewById(R.id.lvFileList);
-		gView.setOnItemClickListener(new OnItemClickListener() {
+        gView = (GridView) findViewById(R.id.lvFileList);
+        gView.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-
-				FileInfo info = listItem.get(arg2);
-
-				if (info.isDirectory()) {
-
-					if (info.getFile() == null) {
-
-						Log.e("hanfuye", "tmp==null");
-
-					} else {
-						i = i + 1;
-
-						nowFile = info.getFile();
-
-						root[i] = nowFile;
-
-						inflateListView(nowFile);
-
-					}
-				} else
-					alert(info.getPath());
-			}
-		});
-	}
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                    long arg3) {
+                FileInfo info = listItem.get(arg2);
+                if (info.isDirectory()) {
+                    if (info.getFile() == null) {
+                        Log.e("hanfuye", "tmp==null");
+                    } else {
+                        i = i + 1;
+                        nowFile = info.getFile();
+                        root[i] = nowFile;
+                        inflateListView(nowFile);
+                    }
+                } else {
+                    Intent intent = new Intent();
+                    File file = info.getFile();
+                    Uri uri = Uri.fromFile(file);
+                    intent.setData(uri);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            }
+        });
+    }
 
 	private void inflateListView(File file) {
 
@@ -169,29 +179,6 @@ public class FileBrowerAcitvity extends BaseActivity {
 		
 		return R.drawable.filebrower_file;
 		
-	}
-
-	private void alert(String string) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-		builder.setMessage(getResources().getString(R.string.makesure)+string);
-		builder.setCancelable(false);
-		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				Intent intent = new Intent();
-				intent.setClass(FileBrowerAcitvity.this, CcnActivity.class);
-				startActivity(intent);
-				FileBrowerAcitvity.this.finish();
-			}
-		});
-		builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
-
-		AlertDialog ad = builder.create();
-		ad.show();
 	}
 
 }
