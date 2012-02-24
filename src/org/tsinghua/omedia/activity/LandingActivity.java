@@ -80,26 +80,6 @@ public class LandingActivity extends BaseActivity {
 						startActivity(intent);
 					}
 				});
-		// 按钮
-		findViewById(R.id.touchmeButton).setOnClickListener(
-				new OnClickListener() {
-					public void onClick(View v) {
-						showMsg("hanchao1107@gmail.com");
-					}
-				});
-		// 按钮
-		findViewById(R.id.showButton).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				showMsg("Very Good~!");
-			}
-		});
-		// 按钮
-		findViewById(R.id.positionButton).setOnClickListener(
-				new OnClickListener() {
-					public void onClick(View v) {
-						showMsg("I don't know~!");
-					}
-				});
 	}
 
 	private void doLogin(LoginForm form) {

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:layout_margin="50dip"
+    android:layout_height="fill_parent"
     android:orientation="vertical">
 
     <LinearLayout android:layout_width="fill_parent"
@@ -12,63 +11,30 @@
         <FrameLayout android:layout_height="fill_parent"
             android:layout_width="0dip"
             android:layout_weight="1">
-            <Button android:text="@string/btn_tblog"
-                android:id="@+id/btn_tblog"
-                android:layout_width="100dip"
-                android:layout_height="100dip"
-                android:layout_gravity="center"/>
-        </FrameLayout>
-        <FrameLayout android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1">
             <Button android:text="@string/btn_friends"
                 android:id="@+id/btn_friends"
-                android:layout_width="100dip"
-                android:layout_height="100dip"
-                android:layout_gravity="center"/>
+                style="@style/main_activity_button"/>
         </FrameLayout>
         <FrameLayout android:layout_height="fill_parent"
             android:layout_width="0dip"
             android:layout_weight="1">
             <Button android:text="@string/btn_notice"
                 android:id="@+id/btn_notice"
-                android:layout_width="100dip"
-                android:layout_height="100dip"
-                android:layout_gravity="center"/>
+                style="@style/main_activity_button"/>
         </FrameLayout>
         <FrameLayout android:layout_height="fill_parent"
             android:layout_width="0dip"
             android:layout_weight="1">
             <Button android:text="CCN"
                 android:id="@+id/btn_ccn"
-                android:layout_width="100dip"
-                android:layout_height="100dip"
-                android:layout_gravity="center"/>
+                style="@style/main_activity_button"/>
         </FrameLayout>
         <FrameLayout android:layout_height="fill_parent"
             android:layout_width="0dip"
             android:layout_weight="1">
             <Button android:text="@string/btn_settings"
                 android:id="@+id/btn_settings"
-                android:layout_width="100dip"
-                android:layout_height="100dip"
-                android:layout_gravity="center"/>
-        </FrameLayout>
-        <FrameLayout android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1">
-        </FrameLayout>
-        <FrameLayout android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1">
-        </FrameLayout>
-        <FrameLayout android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1">
-        </FrameLayout>
-        <FrameLayout android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1">
+                style="@style/main_activity_button"/>
         </FrameLayout>
     </LinearLayout>
     <LinearLayout android:layout_width="fill_parent"
