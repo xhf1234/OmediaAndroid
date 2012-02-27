@@ -1,62 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
-
-    <LinearLayout android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-        <FrameLayout android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1">
-            <Button android:text="@string/btn_friends"
-                android:id="@+id/btn_friends"
-                style="@style/main_activity_button"/>
-        </FrameLayout>
-        <FrameLayout android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1">
-            <Button android:text="@string/btn_notice"
-                android:id="@+id/btn_notice"
-                style="@style/main_activity_button"/>
-        </FrameLayout>
-        <FrameLayout android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1">
-            <Button android:text="CCN"
-                android:id="@+id/btn_ccn"
-                style="@style/main_activity_button"/>
-        </FrameLayout>
-        <FrameLayout android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1">
-            <Button android:text="@string/btn_settings"
-                android:id="@+id/btn_settings"
-                style="@style/main_activity_button"/>
-        </FrameLayout>
-    </LinearLayout>
-    <LinearLayout android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-    </LinearLayout>
-    <LinearLayout android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-    </LinearLayout>
-    <LinearLayout android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-    </LinearLayout>
-    <LinearLayout android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-    </LinearLayout>
-    
-</LinearLayout>
-
+    android:verticalSpacing="10dip"
+    android:horizontalSpacing="10dip"
+    android:numColumns="4"
+    android:stretchMode="columnWidth"
+    android:gravity="center"
+    android:paddingTop="30dip"
+    android:id="@+id/gridview">
+</GridView>

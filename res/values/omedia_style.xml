@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="omedia.theme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/omedia.actionbar</item>
+    </style>
+
+	<style name="omedia.actionbar" parent="android:Widget.Holo.Light.ActionBar">
+	    <!-- <item name="android:height">200dip</item> -->
+	</style>
+</resources>

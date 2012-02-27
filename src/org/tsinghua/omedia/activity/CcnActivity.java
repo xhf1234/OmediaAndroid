@@ -15,6 +15,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -36,24 +39,24 @@ public class CcnActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ccn_activity);
-        listView = (ListView) findViewById(R.id.filelist);
+        listView = (ListView) findViewById(R.id.listview);
         initListener();
     }
 
     private void initListener() {
-        findViewById(R.id.selectfile_button).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CcnActivity.this, FileBrowerAcitvity.class);
-                startActivityForResult(intent, RequestCode.CCN_SELECT_FILE);
-            }
-        });
     }
     
     @Override
     public void onResume() {
         super.onResume();
         updateUI();
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.ccn_activity_menu, menu);
+        return true;
     }
 
     private void updateUI() {
@@ -65,10 +68,22 @@ public class CcnActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.select_file) {
+            Intent intent = new Intent(CcnActivity.this,
+                    FileBrowerAcitvity.class);
+            startActivityForResult(intent, REQUEST_SELECT_FILE);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onEventCatch(Event event) {
         if(event instanceof CcnFilesUpdateEvent) {
             updateUI();
-            dismissDialog(DIALOG_WAITING);
+            dissmissWaitingDialog();
         }
         super.onEventCatch(event);
     }
@@ -110,9 +125,10 @@ public class CcnActivity extends BaseActivity {
     }
 
 
+    private static final int REQUEST_SELECT_FILE = 1;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if(requestCode == RequestCode.CCN_SELECT_FILE && resultCode==RESULT_OK) {
+        if(requestCode == REQUEST_SELECT_FILE && resultCode==RESULT_OK) {
             Uri uri = intent.getData();
             ccnPutFile(uri);
         } else {
@@ -121,20 +137,20 @@ public class CcnActivity extends BaseActivity {
     }
     
     private void ccnPutFile(Uri fileUri) {
-    	File file = new File(fileUri.getPath());
-    	showDialog(DIALOG_WAITING);
-    	new MultipartWorker(file, file.getName()) {
-			
-			@Override
-			protected void onSuccess() {
-				checkDataUpdate();
-			}
-			
-			@Override
-			protected void onFailed(Exception e) {
-				logger.error(e);
-			}
-		}.start();
+        File file = new File(fileUri.getPath());
+        showWaitingDialog();
+        new MultipartWorker(file, file.getName()) {
+
+            @Override
+            protected void onSuccess() {
+                checkDataUpdate();
+            }
+
+            @Override
+            protected void onFailed(Exception e) {
+                logger.error(e);
+            }
+        }.start();
     }
     
 }

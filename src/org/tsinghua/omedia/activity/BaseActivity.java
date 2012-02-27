@@ -11,7 +11,9 @@ import org.tsinghua.omedia.worker.CheckDataUpdateWorker;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 /**
  * 
@@ -22,8 +24,12 @@ public class BaseActivity extends Activity implements OmediaActivityIntf {
     protected OmediaApplication omedia = OmediaApplication.getInstance();
     protected DataSource dataSource = DataSource.getInstance();
     
-    protected static final int DIALOG_WAITING = 1;
+    private static final int DIALOG_WAITING = 1;
     
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
     public void showAlertDialog(String message) {
         OmediaActivityDelegate.showAlertDialog(message, this);
     }
@@ -38,17 +44,29 @@ public class BaseActivity extends Activity implements OmediaActivityIntf {
         OmediaActivityDelegate.tokenWrong(this);
     }
 
-	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-		switch(id) {
-		case DIALOG_WAITING:
-			ProgressDialog dialog = new ProgressDialog(this);
-			dialog.setTitle(R.string.waiting);
-			return dialog;
-		default:
-			return super.onCreateDialog(id, args);
-		}
-	}
+    private ProgressDialog waitingDialog;
+
+    @Override
+    protected Dialog onCreateDialog(int id, Bundle args) {
+        switch (id) {
+        case DIALOG_WAITING:
+            waitingDialog = new ProgressDialog(this);
+            waitingDialog.setTitle(R.string.waiting);
+            return waitingDialog;
+        default:
+            return super.onCreateDialog(id, args);
+        }
+    }
+    
+    protected void dissmissWaitingDialog() {
+        if(waitingDialog != null && waitingDialog.isShowing()) {
+            waitingDialog.dismiss();
+        }
+    }
+    
+    protected void showWaitingDialog() {
+        showDialog(DIALOG_WAITING);
+    }
     
     /**
      * 打开文件
@@ -72,7 +90,17 @@ public class BaseActivity extends Activity implements OmediaActivityIntf {
     	new CheckDataUpdateWorker(1).start();
     }
     
-    protected interface RequestCode {
-        public static int CCN_SELECT_FILE = 1;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

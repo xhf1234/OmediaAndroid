@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 /**
  * 登陆和注册页
@@ -99,10 +98,6 @@ public class LandingActivity extends BaseActivity {
 				showAlertDialog(R.string.software_need_update);
 			}
 		}.call();
-	}
-
-	private void showMsg(String msg) {
-		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
 
 	private void loginSuccess(final long accountId, final long token) {
