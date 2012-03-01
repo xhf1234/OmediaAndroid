@@ -8,17 +8,19 @@ import org.tsinghua.omedia.datasource.DataSource;
 import org.tsinghua.omedia.event.Event;
 import org.tsinghua.omedia.worker.CheckDataUpdateWorker;
 
+import android.actionbar.compat.ActionBarActivity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.view.MenuItem;
 
 /**
  * 
  * @author xuhongfeng
  *
  */
-public class BaseActivity extends FragmentActivity implements OmediaActivityIntf {
+public class BaseActivity extends ActionBarActivity implements OmediaActivityIntf {
     protected OmediaApplication omedia = OmediaApplication.getInstance();
     protected DataSource dataSource = DataSource.getInstance();
     
@@ -87,4 +89,21 @@ public class BaseActivity extends FragmentActivity implements OmediaActivityIntf
     protected void checkDataUpdate() {
     	new CheckDataUpdateWorker(1).start();
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            if(this.getClass()!=LandingActivity.class
+                    && this.getClass()!=MainActivity.class
+                    && this.getClass()!=RegisterActivity.class) {
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    
 }

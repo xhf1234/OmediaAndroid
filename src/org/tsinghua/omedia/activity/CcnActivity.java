@@ -54,9 +54,10 @@ public class CcnActivity extends BaseActivity {
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.ccn_activity_menu, menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.ccn_activity_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+
     }
 
     private void updateUI() {
@@ -69,14 +70,14 @@ public class CcnActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.select_file) {
-//            Intent intent = new Intent(CcnActivity.this,
-//                    FileBrowerAcitvity.class);
-//            startActivityForResult(intent, REQUEST_SELECT_FILE);
-//            return true;
-//        } else {
+        if (item.getItemId() == R.id.select_file) {
+            Intent intent = new Intent(CcnActivity.this,
+                    FileBrowerAcitvity.class);
+            startActivityForResult(intent, REQUEST_SELECT_FILE);
+            return true;
+        } else {
             return super.onOptionsItemSelected(item);
-//        }
+        }
     }
 
     @Override
