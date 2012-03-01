@@ -17,8 +17,7 @@
         android:debuggable="true"
         android:icon="@drawable/omedia"
         android:label="@string/app_name"
-        android:name=".OmediaApplication" 
-        android:theme="@style/omedia.theme">
+        android:name=".OmediaApplication">
         <activity android:name=".activity.LandingActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" >

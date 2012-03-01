@@ -8,19 +8,17 @@ import org.tsinghua.omedia.datasource.DataSource;
 import org.tsinghua.omedia.event.Event;
 import org.tsinghua.omedia.worker.CheckDataUpdateWorker;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.support.v4.app.FragmentActivity;
 
 /**
  * 
  * @author xuhongfeng
  *
  */
-public class BaseActivity extends Activity implements OmediaActivityIntf {
+public class BaseActivity extends FragmentActivity implements OmediaActivityIntf {
     protected OmediaApplication omedia = OmediaApplication.getInstance();
     protected DataSource dataSource = DataSource.getInstance();
     
@@ -88,19 +86,5 @@ public class BaseActivity extends Activity implements OmediaActivityIntf {
     
     protected void checkDataUpdate() {
     	new CheckDataUpdateWorker(1).start();
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // app icon in action bar clicked; go home
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

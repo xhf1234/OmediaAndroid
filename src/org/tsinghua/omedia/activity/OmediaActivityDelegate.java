@@ -7,11 +7,11 @@ import org.tsinghua.omedia.tool.FileUtils;
 import org.tsinghua.omedia.ui.dialog.AlertDialogFragment;
 
 import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 
 /**
  * 
@@ -20,9 +20,9 @@ import android.net.Uri;
  */
 public class OmediaActivityDelegate {
 	
-    public static void showAlertDialog(String message, Activity activity) {
-        FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
-        Fragment prev = activity.getFragmentManager().findFragmentByTag("alertDialog");
+    public static void showAlertDialog(String message, BaseActivity activity) {
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        Fragment prev = activity.getSupportFragmentManager().findFragmentByTag("alertDialog");
         if(prev != null) {
             ft.remove(prev);
         }
@@ -30,7 +30,7 @@ public class OmediaActivityDelegate {
         DialogFragment dialog = new AlertDialogFragment(message);
         dialog.show(ft, "alertDialog");
     }
-    public static void showAlertDialog(int stringId, Activity activity) {
+    public static void showAlertDialog(int stringId, BaseActivity activity) {
         String message = activity.getResources().getString(stringId);
         showAlertDialog(message, activity);
     }
