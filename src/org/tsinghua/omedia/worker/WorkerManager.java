@@ -33,6 +33,7 @@ public class WorkerManager {
             checkDataUpdateWorker = new CheckDataUpdateWorker();
             checkDataUpdateWorker.start();
         }
+        new InitCcnWorker().start();
     }
     
     public synchronized void stopLoopWorkers() {

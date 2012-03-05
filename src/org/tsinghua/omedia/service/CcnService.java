@@ -131,22 +131,24 @@ public class CcnService implements CCNxServiceCallback {
         }
     }
     
-    private CCNxServiceControl getCcnd() throws IOException {
+    private synchronized CCNxServiceControl getCcnd() throws IOException {
         if(ccnd != null) return ccnd;
-        synchronized (this) {
-            if(ccnd == null) {
-                String host = DataSource.getInstance().getCcnHost();
-                logger.info("ccn host="+host);
-                CCNxConfiguration.config(OmediaApplication.getInstance().getApplicationContext());
-                ccnd = new CCNxServiceControl(OmediaApplication.getInstance().getApplicationContext());
-                ccnd.registerCallback(this);
-                ccnd.connect();
-                ccnd.startAllInBackground();
-                ccndc("ccnx:/", host);
-            }
-        }
+        init();
         if(ccnd == null) throw new IOException("start ccnd failed");
         return ccnd;
+    }
+    
+    public synchronized void init() {
+        if(ccnd == null) {
+            String host = DataSource.getInstance().getCcnHost();
+            logger.info("ccn host="+host);
+            CCNxConfiguration.config(OmediaApplication.getInstance().getApplicationContext());
+            ccnd = new CCNxServiceControl(OmediaApplication.getInstance().getApplicationContext());
+            ccnd.registerCallback(this);
+            ccnd.connect();
+            ccnd.startAll();
+            ccndc("ccnx:/", host);
+        }
     }
 
     @Override
