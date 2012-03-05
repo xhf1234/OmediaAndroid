@@ -7,6 +7,8 @@ import org.tsinghua.omedia.R;
 import org.tsinghua.omedia.datasource.DataSource;
 import org.tsinghua.omedia.event.Event;
 import org.tsinghua.omedia.worker.CheckDataUpdateWorker;
+import org.tsinghua.omedia.worker.Worker;
+import org.tsinghua.omedia.worker.WorkerManager;
 
 import android.actionbar.compat.ActionBarActivity;
 import android.app.Dialog;
@@ -53,6 +55,7 @@ public class BaseActivity extends ActionBarActivity implements OmediaActivityInt
         case DIALOG_WAITING:
             waitingDialog = new ProgressDialog(this);
             waitingDialog.setTitle(R.string.waiting);
+            waitingDialog.setIndeterminate(true);
             return waitingDialog;
         default:
             return super.onCreateDialog(id, args);
@@ -114,5 +117,9 @@ public class BaseActivity extends ActionBarActivity implements OmediaActivityInt
     @Override
     public void toast(int strId) {
         Toast.makeText(this, strId, Toast.LENGTH_SHORT).show();
+    }
+    
+    protected void runWorker(Worker worker) {
+        WorkerManager.getInstance().runWorker(worker);
     }
 }

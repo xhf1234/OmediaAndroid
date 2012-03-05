@@ -14,6 +14,7 @@ public abstract class Worker extends AsyncTask<Void, Void, Void> {
     protected OmediaConsole omediaConsole = new OmediaConsole();
     protected DataSource dataSource = DataSource.getInstance();
     
+    private WorkerListener listener;
     protected volatile boolean running = false;
     
     /**
@@ -35,13 +36,10 @@ public abstract class Worker extends AsyncTask<Void, Void, Void> {
     
     protected abstract void innerRun();
     
-    /**
-     * worker shutdown hook
-     * default action is doing nothing
-     * subclass can override this
-     */
     protected void onStop() {
-        
+        if(listener != null) {
+            listener.onStop();
+        }
     }
 
     @Override
@@ -54,5 +52,9 @@ public abstract class Worker extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
         onStop();
+    }
+    
+    public void setListener(WorkerListener listener) {
+        this.listener = listener;
     }
 }

@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onResume() {
         updateUI();
-        WorkerManager.getInstance().startWorkers();
+        WorkerManager.getInstance().startLoopWorkers();
         super.onResume();
     }
 
@@ -52,7 +52,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        WorkerManager.getInstance().stopWorkers();
+        WorkerManager.getInstance().stopLoopWorkers();
         super.onBackPressed();
     }
 

@@ -1,13 +1,12 @@
 package org.tsinghua.omedia.activity;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.tsinghua.omedia.R;
-import org.tsinghua.omedia.datasource.sdcard.CcnFileDatasource;
 import org.tsinghua.omedia.event.CcnFilesUpdateEvent;
 import org.tsinghua.omedia.event.Event;
 import org.tsinghua.omedia.tool.Logger;
+import org.tsinghua.omedia.worker.CcnDownloadWorker;
 import org.tsinghua.omedia.worker.MultipartWorker;
 
 import android.app.Activity;
@@ -112,12 +111,21 @@ public class CcnActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     String ccnFile = files[position];
-                    try {
-                        File file = CcnFileDatasource.getInstance().getCcnFile(ccnFile);
-                        openFile(file);
-                    } catch (IOException e) {
-                        logger.error(e);
-                    }
+                    CcnDownloadWorker worker = new CcnDownloadWorker(ccnFile) {
+                        @Override
+                        protected void onSuccess(File file) {
+                            dissmissWaitingDialog();
+                            openFile(file);
+                        }
+                        
+                        @Override
+                        protected void onFailed(Exception e) {
+                            dissmissWaitingDialog();
+                            logger.error(e);
+                        }
+                    };
+                    showWaitingDialog();
+                    runWorker(worker);
                 }
             });
             return convertView;
@@ -139,19 +147,22 @@ public class CcnActivity extends BaseActivity {
     
     private void ccnPutFile(Uri fileUri) {
         File file = new File(fileUri.getPath());
-        showWaitingDialog();
-        new MultipartWorker(file, file.getName()) {
+        MultipartWorker worker = new MultipartWorker(file, file.getName()) {
 
             @Override
             protected void onSuccess() {
+                dissmissWaitingDialog();
                 checkDataUpdate();
             }
 
             @Override
             protected void onFailed(Exception e) {
+                dissmissWaitingDialog();
                 logger.error(e);
             }
-        }.start();
+        };
+        showWaitingDialog();
+        runWorker(worker);
     }
     
 }

@@ -1,5 +1,8 @@
 package org.tsinghua.omedia.worker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author xuhongfeng
@@ -8,6 +11,8 @@ package org.tsinghua.omedia.worker;
 public class WorkerManager {
     
     private static WorkerManager me;
+    
+    private List<Worker> cancelableWorkers = new ArrayList<Worker>();
     
     private CheckDataUpdateWorker checkDataUpdateWorker;
     
@@ -23,16 +28,35 @@ public class WorkerManager {
         return me;
     }
     
-    public synchronized void startWorkers() {
+    public synchronized void startLoopWorkers() {
         if(checkDataUpdateWorker == null) {
             checkDataUpdateWorker = new CheckDataUpdateWorker();
             checkDataUpdateWorker.start();
         }
     }
     
-    public synchronized void stopWorkers() {
+    public synchronized void stopLoopWorkers() {
         checkDataUpdateWorker.stop();
         checkDataUpdateWorker = null;
     }
+    
+    public synchronized void stopCancelableWorkers() {
+        for(Worker w:cancelableWorkers) {
+            w.stop();
+        }
+        cancelableWorkers.clear();
+    }
 
+    public synchronized void runWorker(final Worker worker) {
+        cancelableWorkers.add(worker);
+        worker.setListener(new WorkerListener() {
+            @Override
+            public void onStop() {
+                synchronized (WorkerManager.this) {
+                    cancelableWorkers.remove(worker);
+                }
+            }
+        });
+        worker.start();
+    }
 }
