@@ -58,6 +58,6 @@ public class OmediaActivityDelegate {
         //设置intent的data和Type属性。
         intent.setDataAndType(/*uri*/Uri.fromFile(file), type);
         //跳转
-        activity.startActivity(intent);    
+        activity.startActivity(intent);
     }
 }

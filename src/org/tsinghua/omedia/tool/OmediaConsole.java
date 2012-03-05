@@ -18,8 +18,7 @@ public class OmediaConsole implements OmediaActivityIntf {
 
     @Override
     public void showAlertDialog(String message) {
-        Toast.makeText(OmediaApplication.getInstance()
-                .getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        toast(message);
     }
 
     @Override
@@ -43,4 +42,14 @@ public class OmediaConsole implements OmediaActivityIntf {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void toast(String s) {
+        Toast.makeText(OmediaApplication.getInstance()
+                .getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void toast(int strId) {
+        Toast.makeText(OmediaApplication.getInstance()
+                .getApplicationContext(), strId, Toast.LENGTH_SHORT).show();
+    }
 }

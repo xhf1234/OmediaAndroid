@@ -38,6 +38,18 @@
         </activity>
         <activity android:name=".activity.FileBrowerAcitvity" >
         </activity>
+        
+        <service android:name="org.ccnx.android.services.ccnd.CcndService">
+            <intent-filter>
+                <action android:name="org.ccnx.android.service.ccnd.SERVICE"></action>
+            </intent-filter>    
+        </service>
+        
+        <service android:name="org.ccnx.android.services.repo.RepoService">
+            <intent-filter>
+                <action android:name="org.ccnx.android.service.repo.SERVICE"></action>
+            </intent-filter>    
+        </service>
     </application>
 
 </manifest>

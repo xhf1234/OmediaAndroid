@@ -23,14 +23,14 @@ public class WorkerManager {
         return me;
     }
     
-    public void startWorkers() {
+    public synchronized void startWorkers() {
         if(checkDataUpdateWorker == null) {
             checkDataUpdateWorker = new CheckDataUpdateWorker();
             checkDataUpdateWorker.start();
         }
     }
     
-    public void stopWorkers() {
+    public synchronized void stopWorkers() {
         checkDataUpdateWorker.stop();
         checkDataUpdateWorker = null;
     }

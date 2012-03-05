@@ -14,6 +14,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * 
@@ -99,11 +100,19 @@ public class BaseActivity extends ActionBarActivity implements OmediaActivityInt
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                break;
             }
+            break;
         }
         return super.onOptionsItemSelected(item);
     }
     
+    @Override
+    public void toast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
     
+    @Override
+    public void toast(int strId) {
+        Toast.makeText(this, strId, Toast.LENGTH_SHORT).show();
+    }
 }

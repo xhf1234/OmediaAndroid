@@ -5,7 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.ccnx.android.ccnlib.CCNxConfiguration;
+import org.ccnx.android.ccnlib.CCNxServiceCallback;
 import org.ccnx.android.ccnlib.CCNxServiceControl;
+import org.ccnx.android.ccnlib.CCNxServiceStatus.SERVICE_STATUS;
 import org.ccnx.ccn.CCNHandle;
 import org.ccnx.ccn.impl.CCNNetworkManager.NetworkProtocol;
 import org.ccnx.ccn.io.CCNInputStream;
@@ -24,12 +26,13 @@ import android.os.AsyncTask;
  * @author xuhongfeng
  *
  */
-public class CcnService {
+public class CcnService implements CCNxServiceCallback {
     private static final Logger logger = Logger.getLogger(CcnService.class);
     
     private static CcnService me;
     
-    private CcnService(){}
+    private CcnService(){
+    }
     
     public static CcnService getInstance() {
         if(me != null) return me;
@@ -133,14 +136,22 @@ public class CcnService {
         synchronized (this) {
             if(ccnd == null) {
                 String host = DataSource.getInstance().getCcnHost();
+                logger.info("ccn host="+host);
                 CCNxConfiguration.config(OmediaApplication.getInstance().getApplicationContext());
                 ccnd = new CCNxServiceControl(OmediaApplication.getInstance().getApplicationContext());
-                ccnd.startCcnd();
+                ccnd.registerCallback(this);
+                ccnd.connect();
+                ccnd.startAllInBackground();
                 ccndc("ccnx:/", host);
             }
         }
         if(ccnd == null) throw new IOException("start ccnd failed");
         return ccnd;
+    }
+
+    @Override
+    public void newCCNxStatus(SERVICE_STATUS st) {
+        OmediaApplication.getInstance().getCurrentActivity().toast(st.toString());
     }
     
 }
