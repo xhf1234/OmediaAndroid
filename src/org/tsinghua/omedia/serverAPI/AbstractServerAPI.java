@@ -68,7 +68,16 @@ public abstract class AbstractServerAPI<F extends AbstractForm> implements Serve
             }
 
             @Override
+            protected void onExceptionCatched(Throwable e) {
+                onStop();
+                super.onExceptionCatched(e);
+            }
+
+
+
+            @Override
             protected void onProcessSuccess(JsonObject jsonResult, int resultCode) {
+                onStop();
                 ResultCodeListener<? extends Jsonable> listener = resultCodeListener.get(resultCode);
                 if(listener != null) {
                     listener.exec(jsonResult);
@@ -79,6 +88,10 @@ public abstract class AbstractServerAPI<F extends AbstractForm> implements Serve
                 }
             }
         }.exec();
+    }
+    
+    protected void onStop() {
+        
     }
     
     /**

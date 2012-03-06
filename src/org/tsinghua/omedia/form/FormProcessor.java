@@ -1,6 +1,7 @@
 package org.tsinghua.omedia.form;
 
 
+import java.net.SocketTimeoutException;
 import java.util.Map;
 
 import org.tsinghua.omedia.R;
@@ -94,7 +95,11 @@ public abstract class FormProcessor<F extends AbstractForm> {
      */
     protected void onExceptionCatched(Throwable e) {
         logger.error("Form Processor Exception", e);
-        activity.showAlertDialog(e.getMessage());
+        if(e instanceof SocketTimeoutException) {
+            activity.showAlertDialog(R.string.error_conn_timeout);
+        } else {
+            activity.showAlertDialog(e.getMessage());
+        }
     }
     
     /**
