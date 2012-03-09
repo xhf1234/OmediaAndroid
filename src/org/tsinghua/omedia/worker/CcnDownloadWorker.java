@@ -3,8 +3,6 @@ package org.tsinghua.omedia.worker;
 import java.io.File;
 import java.io.IOException;
 
-import org.tsinghua.omedia.datasource.sdcard.CcnFileDatasource;
-
 /**
  * 
  * @author xuhongfeng
@@ -21,7 +19,7 @@ public abstract class CcnDownloadWorker extends Worker{
     @Override
     protected void innerRun() {
         try {
-            File file = CcnFileDatasource.getInstance().getCcnFile(ccnFile);
+            File file = dataSource.getCcnFile(ccnFile);
             onSuccess(file);
         } catch (IOException e) {
             onFailed(e);

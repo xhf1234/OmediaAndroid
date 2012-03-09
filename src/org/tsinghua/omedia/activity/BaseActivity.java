@@ -62,7 +62,7 @@ public class BaseActivity extends ActionBarActivity implements OmediaActivityInt
         }
     }
     
-    protected void dissmissWaitingDialog() {
+    protected void dismissWaitingDialog() {
         if(waitingDialog != null && waitingDialog.isShowing()) {
             waitingDialog.dismiss();
         }

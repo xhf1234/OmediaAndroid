@@ -23,4 +23,5 @@ public class UrlConst {
     public static final String GetConfigUrl = BaseUrl+"getConfig.do";
     public static final String ShowCcnFilesUrl = BaseUrl+"showCcnFiles.do";
     public static final String ccnPutFileUrl = BaseUrl+"ccnPutFile.do";
+    public static final String ccnDeleteFileUrl = BaseUrl+"deleteCcnFile.do";
 }

@@ -5,6 +5,8 @@ import java.io.File;
 import org.tsinghua.omedia.R;
 import org.tsinghua.omedia.event.CcnFilesUpdateEvent;
 import org.tsinghua.omedia.event.Event;
+import org.tsinghua.omedia.form.DeleteCcnFileForm;
+import org.tsinghua.omedia.serverAPI.DeleteCcnFileAPI;
 import org.tsinghua.omedia.tool.Logger;
 import org.tsinghua.omedia.worker.CcnDownloadWorker;
 import org.tsinghua.omedia.worker.MultipartWorker;
@@ -13,13 +15,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,19 +36,88 @@ import android.widget.TextView;
  *
  */
 public class CcnActivity extends BaseActivity {
-    private static final Logger logger = Logger.getLogger(BaseActivity.class);
+    private static final Logger logger = Logger.getLogger(CcnActivity.class);
     
     private ListView listView;
+    private CcnListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ccn_activity);
         listView = (ListView) findViewById(R.id.listview);
-        initListener();
     }
+    
+    
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.ccn_activity_context_menu, menu);
+    }
+    
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.delete_file:
+                String ccnName = listAdapter.getFile(info.position);
+                doDeleteFile(ccnName);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+    
+    private void doDeleteFile(final String ccnName) {
+        long accountId = dataSource.getAccountId();
+        long token = dataSource.getToken();
+        DeleteCcnFileForm form = new DeleteCcnFileForm();
+        form.setAccountId(accountId);
+        form.setToken(token);
+        form.setCcnName(ccnName);
+        showWaitingDialog();
+        new DeleteCcnFileAPI(form, this) {
+            @Override
+            protected void onSuccess() {
+                dataSource.deleteCcnFile(ccnName);
+                checkDataUpdate();
+            }
 
+            @Override
+            protected void onStop() {
+                super.onStop();
+                dismissWaitingDialog();
+            }
+            
+        }.call();
+    }
+    
     private void initListener() {
+        registerForContextMenu(listView);
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                    int position, long id) {
+                String ccnFile = listAdapter.getFile(position);
+                CcnDownloadWorker worker = new CcnDownloadWorker(ccnFile) {
+                    @Override
+                    protected void onSuccess(File file) {
+                        dismissWaitingDialog();
+                        openFile(file);
+                    }
+
+                    @Override
+                    protected void onFailed(Exception e) {
+                        dismissWaitingDialog();
+                        logger.error(e);
+                    }
+                };
+                showWaitingDialog();
+                runWorker(worker);
+            }
+        });
     }
     
     @Override
@@ -64,7 +139,9 @@ public class CcnActivity extends BaseActivity {
         for(int i=0; i<files.length; i++) {
             files[i] = dataSource.getCcnFiles()[i].getCcnname();
         }
-        listView.setAdapter(new CcnListAdapter(this, files));
+        listAdapter = new CcnListAdapter(this, files);
+        listView.setAdapter(listAdapter);
+        initListener();
     }
 
     @Override
@@ -83,7 +160,7 @@ public class CcnActivity extends BaseActivity {
     public void onEventCatch(Event event) {
         if(event instanceof CcnFilesUpdateEvent) {
             updateUI();
-            dissmissWaitingDialog();
+            dismissWaitingDialog();
         }
         super.onEventCatch(event);
     }
@@ -106,31 +183,12 @@ public class CcnActivity extends BaseActivity {
             }
             TextView textView = (TextView) convertView.findViewById(R.id.ccn_file_name);
             textView.setText(files[position]);
-            convertView.setOnClickListener(new OnClickListener() {
-                
-                @Override
-                public void onClick(View v) {
-                    String ccnFile = files[position];
-                    CcnDownloadWorker worker = new CcnDownloadWorker(ccnFile) {
-                        @Override
-                        protected void onSuccess(File file) {
-                            dissmissWaitingDialog();
-                            openFile(file);
-                        }
-                        
-                        @Override
-                        protected void onFailed(Exception e) {
-                            dissmissWaitingDialog();
-                            logger.error(e);
-                        }
-                    };
-                    showWaitingDialog();
-                    runWorker(worker);
-                }
-            });
             return convertView;
         }
 
+        public String getFile(int position) {
+            return files[position];
+        }
     }
 
 
@@ -151,13 +209,13 @@ public class CcnActivity extends BaseActivity {
 
             @Override
             protected void onSuccess() {
-                dissmissWaitingDialog();
+                dismissWaitingDialog();
                 checkDataUpdate();
             }
 
             @Override
             protected void onFailed(Exception e) {
-                dissmissWaitingDialog();
+                dismissWaitingDialog();
                 logger.error(e);
             }
         };

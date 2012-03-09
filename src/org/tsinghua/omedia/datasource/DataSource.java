@@ -1,11 +1,15 @@
 package org.tsinghua.omedia.datasource;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.tsinghua.omedia.OmediaApplication;
 import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.data.CcnFile;
 import org.tsinghua.omedia.data.Config;
 import org.tsinghua.omedia.data.FriendRequest;
 import org.tsinghua.omedia.datasource.db.DataBase;
+import org.tsinghua.omedia.datasource.sdcard.CcnFileDatasource;
 import org.tsinghua.omedia.event.CcnFilesUpdateEvent;
 import org.tsinghua.omedia.event.FriendRequestUpdateEvent;
 
@@ -126,6 +130,14 @@ public class DataSource {
         return getMemDataSource().getCcnFiles();
     }
     
+    public File getCcnFile(String ccnName) throws IOException {
+        return getCcnFileDatasource().getCcnFile(ccnName);
+    }
+    
+    public void deleteCcnFile(String ccnName) {
+        getCcnFileDatasource().deleteCcnFile(ccnName);
+    }
+    
     public void saveCcnFiles(CcnFile[] ccnFiles) {
         getMemDataSource().setCcnFiles(ccnFiles);
         OmediaApplication.getInstance().dispatchEvent(
@@ -172,6 +184,10 @@ public class DataSource {
     
     public MemDataSource getMemDataSource() {
         return MemDataSource.getInstance();
+    }
+    
+    public CcnFileDatasource getCcnFileDatasource() {
+        return CcnFileDatasource.getInstance();
     }
     
     public DataBase getDataBase() {

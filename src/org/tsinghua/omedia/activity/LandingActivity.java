@@ -102,7 +102,7 @@ public class LandingActivity extends BaseActivity {
             @Override
             protected void onStop() {
                 super.onStop();
-                dissmissWaitingDialog();
+                dismissWaitingDialog();
             }
             
         }.call();

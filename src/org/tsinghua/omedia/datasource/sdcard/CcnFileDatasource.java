@@ -25,12 +25,17 @@ public class CcnFileDatasource extends AbstractSdcardDatasource {
         return me;
     }
     
-    public File getCcnFile(String ccnFile) throws IOException {
-        File file = new File(getAbsolutePath(ccnFile));
+    public File getCcnFile(String ccnName) throws IOException {
+        File file = new File(getAbsolutePath(ccnName));
         if(!file.exists()) {
-            CcnService.getInstance().ccnGetFile(ccnFile);
+            CcnService.getInstance().ccnGetFile(ccnName);
         }
         return file;
+    }
+    
+    public void deleteCcnFile(String ccnName) {
+        File file = new File(getAbsolutePath(ccnName));
+        file.delete();
     }
     
     @Override
