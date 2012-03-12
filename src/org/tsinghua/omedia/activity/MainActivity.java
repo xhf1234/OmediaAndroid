@@ -141,6 +141,8 @@ public class MainActivity extends BaseActivity {
 		                startActivity(intent);
 						break;
 					case ID_SETTINGS:
+                       intent = new Intent(MainActivity.this, SettingsActivity.class);
+                       startActivity(intent);
 						break;
 					default:
 						break;

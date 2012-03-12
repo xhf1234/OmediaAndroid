@@ -3,7 +3,7 @@ package org.tsinghua.omedia.consts;
 /**
  * 服务端接口的返回码 常量
  * @author xuhongfeng
- *
+ * @see modified by czw
  */
 public class ResultCode extends OmediaConst {
     //服务端错误
@@ -30,5 +30,11 @@ public class ResultCode extends OmediaConst {
         public static final int ADD_YOUR_SELF = 4;
         //已经在您的好友列表中
         public static final int ALREADY_FRIEND = 5;
+    }
+
+    //TODO need to change server
+    public static class Settings extends ResultCode {
+        //password error
+        public static final int PSWERROR = 2;
     }
 }

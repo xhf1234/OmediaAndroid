@@ -66,4 +66,28 @@
     
     <string name="waiting">稍等。。。</string>
 
+    <!-- settings_activity -->
+    <string name="settings_username">用户名：</string>
+    <string name="settings_passwd">密码：</string>
+    <string name="settings_check_passwd">重复密码：</string>
+    <string name="settings_email">注册邮箱：</string>
+    <string name="settings">Settings</string>
+    <string name="settings_name">真实姓名：</string>
+    <string name="settings_date">出生日期：</string>
+    <string name="settings_sex">性别：</string>
+    <string name="settings_boy">帅哥</string>
+    <string name="settings_girl">美女</string>
+    <string name="settings_qq">QQ号码：</string>
+    <string name="settings_phone">手机号码：</string>
+    <string name="settings_address">address：</string>
+    <string name="settings_selectdate">选择日期</string>
+    <string name="settings_photo">Photo</string>
+    <string name="settings_click_photo">Click To Choose Your Photo</string>
+    <string name="settings_ok">OK</string>
+    <string name="settings_cancel">Cancel</string>
+    <string name="settings_failed">settings failed: old password is wrong</string>
+    <string name="settings_success">settings success!</string>
+    <string name="settings_oldpsw">oldPSW</string>
+    <string name="settings_newpsw">newPSW</string>
+
 </resources>
