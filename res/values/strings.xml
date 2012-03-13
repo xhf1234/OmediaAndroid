@@ -76,7 +76,7 @@
     <string name="settings_cancel">Cancel</string>
     <string name="settings_failed">settings failed: old password is wrong</string>
     <string name="settings_success">settings success!</string>
-    <string name="settings_oldpsw">oldPSW</string>
-    <string name="settings_newpsw">newPSW</string>
+    <string name="settings_oldpsw">旧密码</string>
+    <string name="settings_newpsw">新密码</string>
 
 </resources>
