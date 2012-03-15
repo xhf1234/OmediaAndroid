@@ -7,6 +7,7 @@ import org.tsinghua.omedia.annotation.form.HttpParam;
 import org.tsinghua.omedia.annotation.form.NotEmpty;
 import org.tsinghua.omedia.annotation.form.SameTo;
 import org.tsinghua.omedia.annotation.form.Size;
+import org.tsinghua.omedia.annotation.form.SkipValidate;
 
 /**
  * @author czw
@@ -14,18 +15,20 @@ import org.tsinghua.omedia.annotation.form.Size;
 public class SettingsForm extends BaseForm {
 
     @HttpParam(name = "oldPassword")
-    @NotEmpty(msg = "密码不能为空")
+    @NotEmpty(msg = "旧密码不能为空")
     @Size(min = 4, minMsg = "密码不能少于4位", max = 32, maxMsg = "密码不能超过32位")
     @AlphaOrNumber(msg = "密码必须由字母或数字组成")
     private String oldPassword;
 
     @HttpParam(name = "newPassword")
-    @NotEmpty(msg = "密码不能为空")
+    @NotEmpty(msg = "新密码不能为空")
     @Size(min = 4, minMsg = "密码不能少于4位", max = 32, maxMsg = "密码不能超过32位")
     @AlphaOrNumber(msg = "密码必须由字母或数字组成")
+    @SkipValidate(tag="newPassword")
     private String newPassword;
 
     @SameTo(name = "newPassword", msg = "两次密码输入不一致")
+    @SkipValidate(tag="confirmPassword")
     private String confirmPassword;
 
     @HttpParam(name = "email")
@@ -37,7 +40,6 @@ public class SettingsForm extends BaseForm {
     @HttpParam(name = "realName")
     private String realName;
 
-    @Size(min = 11, minMsg = "请输入正确的手机格式", max = 11, maxMsg = "请输入正确的手机格式")
     @HttpParam(name = "phone")
     private String phone;
 
@@ -100,4 +102,22 @@ public class SettingsForm extends BaseForm {
         this.address = address;
     }
 
+    @Override
+    public boolean skipValidate(String tag) {
+        if(tag.equals("newPassword")) {
+            if(newPassword==null || newPassword.trim().isEmpty()) {
+                return true;
+            }
+            return false;
+        } else if(tag.equals("confirmPassword")) {
+            if(newPassword==null || newPassword.trim().isEmpty()) {
+                return true;
+            }
+            return false;
+        } else {
+            return super.skipValidate(tag);
+        }
+    }
+
+    
 }

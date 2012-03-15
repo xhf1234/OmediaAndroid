@@ -2,6 +2,11 @@ package org.tsinghua.omedia.form;
 
 import org.tsinghua.omedia.annotation.form.HttpParam;
 
+/**
+ * 
+ * @author xuhongfeng
+ *
+ */
 public class BaseForm extends AbstractForm {
     @HttpParam(name="accountId")
     protected long accountId;

@@ -7,6 +7,7 @@ import org.tsinghua.omedia.annotation.form.Email;
 import org.tsinghua.omedia.annotation.form.NotEmpty;
 import org.tsinghua.omedia.annotation.form.SameTo;
 import org.tsinghua.omedia.annotation.form.Size;
+import org.tsinghua.omedia.annotation.form.SkipValidate;
 import org.tsinghua.omedia.tool.Logger;
 import org.tsinghua.omedia.tool.StringUtils;
 
@@ -27,6 +28,13 @@ public class FormValidator {
                 Field[] fields = clazz.getDeclaredFields();
                 for(Field e:fields) {
                     e.setAccessible(true);
+                    if(e.isAnnotationPresent(SkipValidate.class)) {
+                        SkipValidate skipAnno = e.getAnnotation(SkipValidate.class);
+                        String tag = skipAnno.tag();
+                        if(form.skipValidate(tag)) {
+                            continue;
+                        }
+                    }
                     if(e.isAnnotationPresent(NotEmpty.class)) {
                         String value = (String) e.get(form);
                         if(value==null || value.length()==0) {
