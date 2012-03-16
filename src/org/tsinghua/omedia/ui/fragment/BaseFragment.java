@@ -10,17 +10,20 @@ import android.view.View;
 /**
  * 
  * @author xuhongfeng
- *
+ * 
+ * 
  */
 public class BaseFragment extends Fragment {
-    protected OmediaApplication omedia = OmediaApplication.getInstance();
-    protected DataSource dataSource = DataSource.getInstance();
+	private static final String LAYOUT_INFLATER_SERVICE = null;
+	protected OmediaApplication omedia = OmediaApplication.getInstance();
+	protected DataSource dataSource = DataSource.getInstance();
 
-    protected BaseActivity getBaseActivity() {
-        return (BaseActivity)getActivity();
-    }
-    
-    protected View findViewById(int id) {
-        return getActivity().findViewById(id);
-    }
+	protected BaseActivity getBaseActivity() {
+		return (BaseActivity) getActivity();
+	}
+
+	protected View findViewById(int id) {
+		return getActivity().findViewById(id);
+	}
+
 }

@@ -34,6 +34,8 @@
         </activity>
         <activity android:name=".activity.FriendsActivity" >
         </activity>
+        <activity android:name=".activity.NoticeActivity" >
+        </activity>
         <activity android:name=".activity.RegisterActivity" >
         </activity>
         <activity android:name=".activity.FileBrowerAcitvity" >

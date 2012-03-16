@@ -9,7 +9,7 @@ public class UrlConst {
 
     public static final String BaseUrl = "http://"
             + OmediaConst.OmediaServerAddr+":"
-            + OmediaConst.OmediaServerPort+"/omedia/";
+            + OmediaConst.OmediaServerPort+"/";
     
     public static final String LoginUrl = BaseUrl+"login.do";
     public static final String RegisterUrl = BaseUrl+"register.do";
