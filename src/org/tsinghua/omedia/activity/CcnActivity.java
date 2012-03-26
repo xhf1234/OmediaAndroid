@@ -83,12 +83,6 @@ public class CcnActivity extends BaseActivity {
                 return super.onContextItemSelected(item);
         }
     }
-    
-    @Override
-    public void onBackPressed() {
-        depth = 0;
-        updateUI(currentDir);
-    }
 
     @Override
     public void onBackPressed() {
