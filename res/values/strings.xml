@@ -31,16 +31,21 @@
     <string name="friends_phone">电话</string>
     <string name="friends_email">电子邮件</string>
     <string name="btn_addfriend">加为好友</string>
+    <string name="btn_deletefriend">删除好友</string>
     <string name="btn_cancel">取消</string>
     <string name="btn_yes">确定</string>
     <string name="alertdialog_title_success">成功</string>
     <string name="addfriend_success">好友邀请已成功发送</string>
+    <string name="alertdialog_msg_deletefriend">确定删除该好友吗？</string>
     
     <!-- notice_activity -->
     <string name="notice_sender">发送者</string>
     <string name="notice_content">内容</string>
     <string name="notice_time">发送时间</string>
     <string name="alertdialog_title_access">接受邀请</string>
+    <string name="btn_accept">接受</string>
+    <string name="btn_reject">拒绝</string>
+    <string name="notice_time_format">${year}年${month}月${date}日${hour}时${minute}分</string>
 
     <!-- register_activity -->
     <string name="register_reset">重置</string>

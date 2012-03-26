@@ -57,7 +57,7 @@ public class SocialGraphFragment extends BaseFriendFragment {
 					try {
 						Account account = JsonUtils.parseJsonObject(jsonString,
 								Account.class);
-						showAddFriend(account);
+						showFriendInfo(account, true);
 					} catch (IOException e) {
 						logger
 								.error("parse json failed! json=" + jsonString,
@@ -72,7 +72,7 @@ public class SocialGraphFragment extends BaseFriendFragment {
 						try {
 							Account account = JsonUtils.parseJsonObject(
 									jsonString, Account.class);
-							showFriendInfo(account);
+							showFriendInfo(account, false);
 						} catch (IOException e) {
 							logger.error("parse json failed! json="
 									+ jsonString, e);

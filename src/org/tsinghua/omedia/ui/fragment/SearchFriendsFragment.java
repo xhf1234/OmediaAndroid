@@ -95,7 +95,7 @@ public class SearchFriendsFragment extends BaseFriendFragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (position > 0)
-					showFriendInfo(accounts[position - 1]);
+					showFriendInfo(accounts[position - 1], true);
 
 			};
 		});

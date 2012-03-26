@@ -50,7 +50,7 @@ public class MyFriendsFragment extends BaseFriendFragment {
 		}.call();
 	}
 
-	private void doShowFriends(Account[] accounts) {
+	private void doShowFriends(final Account[] accounts) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("friends_name", getString(R.string.friends_name));
@@ -82,6 +82,9 @@ public class MyFriendsFragment extends BaseFriendFragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO:
+				if (position > 0) {
+					showFriendInfo(accounts[position - 1], false);
+				}
 
 			};
 		});

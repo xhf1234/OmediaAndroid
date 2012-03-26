@@ -1,6 +1,7 @@
 package org.tsinghua.omedia.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,10 +9,9 @@ import java.util.Map;
 import org.tsinghua.omedia.R;
 import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.data.FriendRequest;
-import org.tsinghua.omedia.datasource.DataSource;
-import org.tsinghua.omedia.form.AddFriendForm;
+import org.tsinghua.omedia.form.FriendRequestReplyForm;
 import org.tsinghua.omedia.form.GetFriendRequestForm;
-import org.tsinghua.omedia.serverAPI.AddFriendAPI;
+import org.tsinghua.omedia.serverAPI.FriendRequestReplyAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendRequestAPI;
 import org.tsinghua.omedia.tool.Logger;
 
@@ -19,7 +19,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.DateSorter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -60,11 +59,13 @@ public class NoticeActivity extends BaseActivity {
 		map.put("notice", getString(R.string.notice_content));
 		map.put("time", getString(R.string.notice_time));
 		list.add(map);
+		String msg_time = null;
 		for (int i = 0; i < requests.length; i++) {
 			map = new HashMap<String, Object>();
 			map.put("sender", requests[i].getFriend().getUsername());
 			map.put("notice", requests[i].getMsg());
-			map.put("time", requests[i].getTime());
+			msg_time = formatTime(requests[i].getTime());
+			map.put("time", msg_time);
 			list.add(map);
 		}
 		SimpleAdapter listAdapter = new SimpleAdapter(this, list,
@@ -86,34 +87,63 @@ public class NoticeActivity extends BaseActivity {
 			};
 		});
 	}
+	
+	private String formatTime(Date date){
+		String time = getString(R.string.notice_time_format);		
+		int year = date.getYear()+1900;
+		time = time.replace("${year}", String.valueOf(year));
+		int month = date.getMonth()+1;
+		time = time.replace("${month}", String.valueOf(month));
+		time = time.replace("${date}", String.valueOf(date.getDate()));
+		time = time.replace("${hour}", String.valueOf(date.getHours()));
+		time = time.replace("${minute}", String.valueOf(date.getMinutes()));
+		return  time;
+	}
 
 	private void showAccessRequest(final Account account) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle(getString(R.string.alertdialog_title_access))
-				.setPositiveButton(getString(R.string.btn_yes),
+				.setPositiveButton(getString(R.string.btn_accept),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								AddFriendForm form = new AddFriendForm();
+								FriendRequestReplyForm form = new FriendRequestReplyForm();
 								form.setAccountId(dataSource
 										.getAccountId());
 								form.setToken(dataSource
 										.getToken());
 								form.setFriendId(account.getAccountId());
-								form.setMsg("");
+								form.setReply(FriendRequestReplyForm.REPLY_ACCEPT);
 								doAccessRequest(form);
 							}
-						}).setNegativeButton(getString(R.string.btn_cancel),
+						}).setNegativeButton(getString(R.string.btn_reject),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
+								FriendRequestReplyForm form = new FriendRequestReplyForm();
+								form.setAccountId(dataSource
+										.getAccountId());
+								form.setToken(dataSource
+										.getToken());
+								form.setFriendId(account.getAccountId());
+								form.setReply(FriendRequestReplyForm.REPLY_REJECT);
+								doAccessRequest(form);
 							}
 						}).show();
 	}
 
-	private void doAccessRequest(AddFriendForm form) {
-		new AddFriendAPI(form, this) {
+	private void doAccessRequest(FriendRequestReplyForm form) {
+		new FriendRequestReplyAPI(form, this) {
 			@Override
-			protected void onSuccess() {
+			protected void onAcceptSuccess() {
+				// TODO:
+			};
+			
+			@Override
+			protected void onRejectSuccess(){
+				// TODO:
+			};
+			
+			@Override
+		    protected void onFailed(){
 				// TODO:
 			};
 		}.call();
