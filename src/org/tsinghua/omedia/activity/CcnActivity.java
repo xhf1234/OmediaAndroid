@@ -90,6 +90,16 @@ public class CcnActivity extends BaseActivity {
         updateUI(currentDir);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (depth == 0) {
+            super.onBackPressed();
+        } else {
+            depth = 0;
+            updateUI(currentDir);
+        }
+    }
+
     private void initRoot() {
         for (int i = 0; i < virtualDirName.length; i++) {
             FileInfoDataSet tmpF = new FileInfoDataSet(virtualDirName[i],
