@@ -1,5 +1,7 @@
 package org.tsinghua.omedia.consts;
 
+import org.tsinghua.omedia.form.FriendRequestReplyForm;
+
 /**
  * 服务端接口的返回码 常量
  * @author xuhongfeng
@@ -36,5 +38,11 @@ public class ResultCode extends OmediaConst {
     public static class Settings extends ResultCode {
         //password error
         public static final int PSWERROR = 2;
+    }
+    
+    public static class FriendRequestReply extends ResultCode {
+        public static final int ACCEPT_SUCCESS = FriendRequestReplyForm.REPLY_ACCEPT;
+        public static final int REJECT_SUCCESS = FriendRequestReplyForm.REPLY_REJECT;
+        public static final int FAILED = 4;
     }
 }
