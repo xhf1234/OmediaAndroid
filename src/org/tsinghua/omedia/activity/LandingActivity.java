@@ -2,6 +2,7 @@ package org.tsinghua.omedia.activity;
 
 import org.tsinghua.omedia.R;
 import org.tsinghua.omedia.consts.ActionConst;
+import org.tsinghua.omedia.consts.UrlConst;
 import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.datasource.DataSource;
 import org.tsinghua.omedia.datasource.MemDataSource;
@@ -12,7 +13,11 @@ import org.tsinghua.omedia.serverAPI.GetAccountAPI;
 import org.tsinghua.omedia.serverAPI.LoginAPI;
 import org.tsinghua.omedia.tool.Logger;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +31,7 @@ import android.widget.EditText;
  * 
  */
 public class LandingActivity extends BaseActivity {
+    private static final int DIALOG_NEED_UPDATE = 100;
 
     private static final Logger logger = Logger
             .getLogger(LandingActivity.class);
@@ -96,7 +102,7 @@ public class LandingActivity extends BaseActivity {
 
             @Override
             protected void onSoftwareNeedUpdate() {
-                showAlertDialog(R.string.software_need_update);
+                showDialog(DIALOG_NEED_UPDATE);
             }
 
             @Override
@@ -140,4 +146,30 @@ public class LandingActivity extends BaseActivity {
         }.call();
     }
 
+    @Override
+    protected Dialog onCreateDialog(int id, Bundle args) {
+        if(id == DIALOG_NEED_UPDATE) {
+            return new AlertDialog.Builder(this).setMessage(R.string.software_need_update)
+                .setPositiveButton(R.string.download_now, new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(UrlConst.DownloadApkUrl));
+                        startActivity(intent);
+                    }
+                }).setNegativeButton(R.string.download_later, new AlertDialog.OnClickListener(){
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dismissDialog(DIALOG_NEED_UPDATE);
+                    }
+                    
+                }).create();
+        } else {
+            return super.onCreateDialog(id, args);
+        }
+    }
+
+    
 }

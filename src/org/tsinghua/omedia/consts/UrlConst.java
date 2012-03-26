@@ -11,6 +11,8 @@ public class UrlConst {
             + OmediaConst.OmediaServerAddr+":"
             + OmediaConst.OmediaServerPort+"/";
     
+    public static final String DownloadApkUrl = BaseUrl+"download-omedia.do";
+    
     public static final String LoginUrl = BaseUrl+"login.do";
     public static final String RegisterUrl = BaseUrl+"register.do";
     public static final String GetAccountUrl = BaseUrl+"getAccount.do";
