@@ -3,7 +3,6 @@ package org.tsinghua.omedia.activity;
 
 import org.tsinghua.omedia.R;
 import org.tsinghua.omedia.data.Account;
-import org.tsinghua.omedia.datasource.DataSource;
 import org.tsinghua.omedia.form.SettingsForm;
 import org.tsinghua.omedia.serverAPI.SettingsAPI;
 

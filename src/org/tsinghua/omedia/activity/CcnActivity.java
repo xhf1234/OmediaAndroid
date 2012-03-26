@@ -1,230 +1,242 @@
+
 package org.tsinghua.omedia.activity;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.tsinghua.omedia.R;
 import org.tsinghua.omedia.event.CcnFilesUpdateEvent;
 import org.tsinghua.omedia.event.Event;
 import org.tsinghua.omedia.form.DeleteCcnFileForm;
 import org.tsinghua.omedia.serverAPI.DeleteCcnFileAPI;
+import org.tsinghua.omedia.tool.FileUtils;
 import org.tsinghua.omedia.tool.Logger;
+import org.tsinghua.omedia.ui.fileBrowser.FileInfoAdapter;
+import org.tsinghua.omedia.ui.fileBrowser.FileInfoDataSet;
 import org.tsinghua.omedia.worker.CcnDownloadWorker;
 import org.tsinghua.omedia.worker.MultipartWorker;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 
 /**
- * 
- * @author xuhongfeng
- * 
+ * @author chenzhuwei
  */
 public class CcnActivity extends BaseActivity {
-	private static final Logger logger = Logger.getLogger(CcnActivity.class);
+    private static final Logger logger = Logger.getLogger(CcnActivity.class);
 
-	private ListView listView;
-	private CcnListAdapter listAdapter;
+    private GridView gridView;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.ccn_activity);
-		listView = (ListView) findViewById(R.id.listview);
-	}
+    private FileInfoAdapter gridAdapter;
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.ccn_activity_context_menu, menu);
-	}
+    private int depth = 0;
 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
-		switch (item.getItemId()) {
-		case R.id.delete_file:
-			String ccnName = listAdapter.getFile(info.position);
-			doDeleteFile(ccnName);
-			return true;
-		default:
-			return super.onContextItemSelected(item);
-		}
-	}
+    private int currentDir = 0; // 0 -- ROOT
 
-	private void doDeleteFile(final String ccnName) {
-		long accountId = dataSource.getAccountId();
-		long token = dataSource.getToken();
-		DeleteCcnFileForm form = new DeleteCcnFileForm();
-		form.setAccountId(accountId);
-		form.setToken(token);
-		form.setCcnName(ccnName);
-		showWaitingDialog();
-		new DeleteCcnFileAPI(form, this) {
-			@Override
-			protected void onSuccess() {
-				dataSource.deleteCcnFile(ccnName);
-				checkDataUpdate();
-			}
+    private ArrayList<FileInfoDataSet> rootDirectory = new ArrayList<FileInfoDataSet>();
 
-			@Override
-			protected void onStop() {
-				super.onStop();
-				dismissWaitingDialog();
-			}
+    private String[] virtualDirName = {
+            "My Doc", "Friends Doc", "Groups Doc"
+    };
 
-		}.call();
-	}
+    private final int MY_DOC = 1;
 
-	private void initListener() {
-		registerForContextMenu(listView);
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int position, long id) {
-				String ccnFile = listAdapter.getFile(position);
-				CcnDownloadWorker worker = new CcnDownloadWorker(ccnFile) {
-					@Override
-					protected void onSuccess(File file) {
-						dismissWaitingDialog();
-						openFile(file);
-					}
+    // private final int FRIENDS_DOC = 2;
 
-					@Override
-					protected void onFailed(Exception e) {
-						dismissWaitingDialog();
-						logger.error(e);
-					}
-				};
-				showWaitingDialog();
-				runWorker(worker);
-			}
-		});
-	}
+    // private final int GROUPS_DOC = 3;
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		updateUI();
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.ccn_activity);
+        gridView = (GridView) findViewById(R.id.gridview);
+        initRoot();
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.ccn_activity_context_menu, menu);
+    }
 
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.ccn_activity_menu, menu);
-		return super.onCreateOptionsMenu(menu);
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.delete_file:
+                String ccnName = gridAdapter.getFile(info.position).getFileName();
+                doDeleteFile(ccnName);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 
-	}
+    private void initRoot() {
+        for (int i = 0; i < virtualDirName.length; i++) {
+            FileInfoDataSet tmpF = new FileInfoDataSet(virtualDirName[i],
+                    R.drawable.filebrower_folder, true);
+            rootDirectory.add(tmpF);
+        }
+    }
 
-	private void updateUI() {
-		String[] files = new String[dataSource.getCcnFiles().length];
-		for (int i = 0; i < files.length; i++) {
-			files[i] = dataSource.getCcnFiles()[i].getCcnname();
-		}
-		listAdapter = new CcnListAdapter(this, files);
-		listView.setAdapter(listAdapter);
-		initListener();
-	}
+    private void doDeleteFile(final String ccnName) {
+        long accountId = dataSource.getAccountId();
+        long token = dataSource.getToken();
+        DeleteCcnFileForm form = new DeleteCcnFileForm();
+        form.setAccountId(accountId);
+        form.setToken(token);
+        form.setCcnName(ccnName);
+        showWaitingDialog();
+        new DeleteCcnFileAPI(form, this) {
+            @Override
+            protected void onSuccess() {
+                dataSource.deleteCcnFile(ccnName);
+                checkDataUpdate();
+            }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.select_file) {
-			Intent intent = new Intent(CcnActivity.this,
-					FileBrowerAcitvity.class);
-			startActivityForResult(intent, REQUEST_SELECT_FILE);
-			return true;
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
-	}
+            @Override
+            protected void onStop() {
+                super.onStop();
+                dismissWaitingDialog();
+            }
 
-	@Override
-	public void onEventCatch(Event event) {
-		if (event instanceof CcnFilesUpdateEvent) {
-			updateUI();
-			dismissWaitingDialog();
-		}
-		super.onEventCatch(event);
-	}
+        }.call();
+    }
 
-	private class CcnListAdapter extends ArrayAdapter<String> {
-		private LayoutInflater inflater;
-		private String[] files;
+    private void initListener() {
+        registerForContextMenu(gridView);
+        gridView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+                if (depth == 1) {
+                    String ccnFile = gridAdapter.getFile(position).getFileName();
+                    CcnDownloadWorker worker = new CcnDownloadWorker(ccnFile) {
+                        @Override
+                        protected void onSuccess(File file) {
+                            dismissWaitingDialog();
+                            openFile(file);
+                        }
 
-		public CcnListAdapter(Activity context, String[] files) {
-			super(context, R.layout.ccn_list_view_item, files);
-			this.files = files;
-			inflater = context.getLayoutInflater();
-		}
+                        @Override
+                        protected void onFailed(Exception e) {
+                            dismissWaitingDialog();
+                            logger.error(e);
+                        }
+                    };
+                    showWaitingDialog();
+                    runWorker(worker);
+                } else if (depth == 0) {
+                    depth = 1;
+                    currentDir = position + 1;
+                    updateUI(currentDir);
+                }
+            }
+        });
+    }
 
-		@Override
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
-			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.ccn_list_view_item,
-						parent, false);
-			}
-			TextView textView = (TextView) convertView
-					.findViewById(R.id.ccn_file_name);
-			textView.setText(files[position]);
-			return convertView;
-		}
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI(currentDir);
+    }
 
-		public String getFile(int position) {
-			return files[position];
-		}
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.ccn_activity_menu, menu);
+        return super.onCreateOptionsMenu(menu);
 
-	private static final int REQUEST_SELECT_FILE = 1;
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
-		if (requestCode == REQUEST_SELECT_FILE && resultCode == RESULT_OK) {
-			Uri uri = intent.getData();
-			ccnPutFile(uri);
-		} else {
-			super.onActivityResult(requestCode, resultCode, intent);
-		}
-	}
+    private void updateUI(int position) {
+        if (depth == 0) {
+            gridAdapter = new FileInfoAdapter(this, rootDirectory);
+            gridView.setAdapter(gridAdapter);
+            initListener();
+        } else if (depth == 1) {
+            ArrayList<FileInfoDataSet> files = new ArrayList<FileInfoDataSet>();
+            if (position == MY_DOC) {
+                int length = dataSource.getCcnFiles().length;
+                String[] fileNames = new String[length];
+                for (int i = 0; i < length; i++) {
+                    fileNames[i] = dataSource.getCcnFiles()[i].getCcnname();
+                    FileInfoDataSet fileInfo = new FileInfoDataSet(fileNames[i],
+                            FileUtils.getImageIdByType(FileUtils.getMIMEType(fileNames[i])));
+                    files.add(fileInfo);
+                }
+            }
+            gridAdapter = new FileInfoAdapter(this, files);
+            gridView.setAdapter(gridAdapter);
+            initListener();
+        }
+    }
 
-	private void ccnPutFile(Uri fileUri) {
-		File file = new File(fileUri.getPath());
-		MultipartWorker worker = new MultipartWorker(file, file.getName()) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.select_file) {
+            Intent intent = new Intent(CcnActivity.this, FileBrowerAcitvity.class);
+            startActivityForResult(intent, REQUEST_SELECT_FILE);
+            return true;
+        } else if (item.getItemId() == R.id.back_file) {
+            depth = 0;
+            updateUI(currentDir);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
-			@Override
-			protected void onSuccess() {
-				dismissWaitingDialog();
-				checkDataUpdate();
-			}
+    @Override
+    public void onEventCatch(Event event) {
+        if (event instanceof CcnFilesUpdateEvent) {
+            updateUI(currentDir);
+            dismissWaitingDialog();
+        }
+        super.onEventCatch(event);
+    }
 
-			@Override
-			protected void onFailed(Exception e) {
-				dismissWaitingDialog();
-				logger.error(e);
-			}
-		};
-		showWaitingDialog();
-		runWorker(worker);
-	}
+    private static final int REQUEST_SELECT_FILE = 1;
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == REQUEST_SELECT_FILE && resultCode == RESULT_OK) {
+            Uri uri = intent.getData();
+            ccnPutFile(uri);
+        } else {
+            super.onActivityResult(requestCode, resultCode, intent);
+        }
+    }
+
+    private void ccnPutFile(Uri fileUri) {
+        File file = new File(fileUri.getPath());
+        MultipartWorker worker = new MultipartWorker(file, file.getName()) {
+
+            @Override
+            protected void onSuccess() {
+                dismissWaitingDialog();
+                checkDataUpdate();
+            }
+
+            @Override
+            protected void onFailed(Exception e) {
+                dismissWaitingDialog();
+                logger.error(e);
+            }
+        };
+        showWaitingDialog();
+        runWorker(worker);
+    }
 }

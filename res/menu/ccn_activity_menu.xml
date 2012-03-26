@@ -4,4 +4,9 @@
           android:title="@string/select_file"
           android:icon="@android:drawable/ic_menu_upload"
           android:showAsAction="always"/>
+    <item android:id="@+id/back_file"
+          android:title="@string/back_file"
+          android:icon="@android:drawable/ic_menu_revert"
+          android:showAsAction="always"/>
+    
 </menu>

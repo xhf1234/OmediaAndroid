@@ -4,7 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.tsinghua.omedia.R;
-import org.tsinghua.omedia.ui.fileBrowser.FileInfo;
+import org.tsinghua.omedia.tool.FileUtils;
+import org.tsinghua.omedia.ui.fileBrowser.FileInfoDataSet;
 import org.tsinghua.omedia.ui.fileBrowser.FileInfoAdapter;
 
 import android.content.Intent;
@@ -26,7 +27,7 @@ import android.widget.TextView;
  */
 public class FileBrowerAcitvity extends BaseActivity {
 
-	private ArrayList<FileInfo> listItem;
+	private ArrayList<FileInfoDataSet> listItem;
 
 	private GridView gView;
 	private TextView tv;
@@ -108,8 +109,8 @@ public class FileBrowerAcitvity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                     long arg3) {
-                FileInfo info = listItem.get(arg2);
-                if (info.isDirectory()) {
+                FileInfoDataSet info = listItem.get(arg2);
+                if (info.getIsDirectory()) {
                     if (info.getFile() == null) {
                         Log.e("hanfuye", "tmp==null");
                     } else {
@@ -134,20 +135,20 @@ public class FileBrowerAcitvity extends BaseActivity {
 
 		File[] currentFiles = file.listFiles();
 
-		ArrayList<FileInfo> array = new ArrayList<FileInfo>();
+		ArrayList<FileInfoDataSet> array = new ArrayList<FileInfoDataSet>();
 
 		tv.setText(file.getAbsolutePath());
 
-		FileInfo info;
+		FileInfoDataSet info;
 
 		for (File f : currentFiles) {
 			if (!f.canRead())
 				continue;
 			if (f.isFile()) {
-				info = new FileInfo(f, iconof(f.getName()));
+				info = new FileInfoDataSet(f, FileUtils.getImageIdByType(FileUtils.getMIMEType(f.getName())));
 				array.add(info);
 			} else {
-				info = new FileInfo(f, R.drawable.filebrower_folder);
+				info = new FileInfoDataSet(f, R.drawable.filebrower_folder);
 				array.add(info);
 			}
 		}
@@ -159,26 +160,6 @@ public class FileBrowerAcitvity extends BaseActivity {
 		FileInfoAdapter adapter = new FileInfoAdapter(this, listItem);
 
 		gView.setAdapter(adapter);
-	}
-
-	private int iconof(String type) {
-		
-		String last=type.substring(type.lastIndexOf(".")+1,type.length());
-
-		if (last.equals("mp3"))
-			return R.drawable.filebrower_mp3;
-		
-		if (last.equals("rmvb")||last.equals("mp4")||last.equals("avi"))
-			return R.drawable.filebrower_midea;
-
-		if(last.equals("tar")||last.equals("zip")||last.equals("gz"))
-			return R.drawable.filebrower_zip;
-		
-		if(last.equals("doc")||last.equals("docx"))
-			return R.drawable.filebrower_office;
-		
-		return R.drawable.filebrower_file;
-		
 	}
 
 }

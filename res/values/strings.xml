@@ -61,6 +61,8 @@
     <!-- ccn_activity -->
     <string name="select_file">上传文件</string>
     <string name="delete_file">删除</string>
+    <string name="back_file">BACK</string>
+
     <!-- file_activity -->
     <string name="filebrower_back">上一层</string>
     <string name="filebrower_close">关闭</string>
