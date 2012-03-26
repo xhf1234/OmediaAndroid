@@ -7,7 +7,6 @@ import org.tsinghua.omedia.R;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,8 @@ public class FileInfoAdapter extends BaseAdapter {
 
     public ArrayList<FileInfoDataSet> fileInfoList; // 所有item
 
+    private final int MAX_SHOW_NAME = 15;
+    
     public FileInfoAdapter(Context ctx, ArrayList<FileInfoDataSet> list) {
         this.ctx = ctx;
         fileInfoList = list;
@@ -34,11 +35,8 @@ public class FileInfoAdapter extends BaseAdapter {
         if (fileInfoList != null) {
             simpleNameList = new ArrayList<String>();
             for (int i = 0; i < fileInfoList.size(); i++) {
-                if (fileInfoList.get(i).getFileName().length() > 12) {
-                    Log.d("CCN_DEBUG", fileInfoList.get(i).getFileName().substring(0, 9)
-                            + "   Length: "
-                            + fileInfoList.get(i).getFileName().substring(0, 9).length());
-                    simpleNameList.add(fileInfoList.get(i).getFileName().substring(0, 9) + "...");
+                if (fileInfoList.get(i).getFileName().length() > MAX_SHOW_NAME) {
+                    simpleNameList.add(fileInfoList.get(i).getFileName().substring(0, 13) + "...");
                 } else {
                     simpleNameList.add(fileInfoList.get(i).getFileName());
                 }

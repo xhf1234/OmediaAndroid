@@ -17,7 +17,7 @@ public class ResultCode extends OmediaConst {
     
     public static class Register extends ResultCode {
         //用户名已存在
-        public static final int USERNAME_EXIST = 4;
+        public static final int USERNAME_EXIST = 2;
     }
     
     public static class Login extends ResultCode {
