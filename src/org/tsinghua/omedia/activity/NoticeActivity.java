@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.AdapterView.OnItemClickListener;
+
 /*
  *
  *	@author liangyong
@@ -87,17 +88,17 @@ public class NoticeActivity extends BaseActivity {
 			};
 		});
 	}
-	
-	private String formatTime(Date date){
-		String time = getString(R.string.notice_time_format);		
-		int year = date.getYear()+1900;
+
+	private String formatTime(Date date) {
+		String time = getString(R.string.notice_time_format);
+		int year = date.getYear() + 1900;
 		time = time.replace("${year}", String.valueOf(year));
-		int month = date.getMonth()+1;
+		int month = date.getMonth() + 1;
 		time = time.replace("${month}", String.valueOf(month));
 		time = time.replace("${date}", String.valueOf(date.getDate()));
 		time = time.replace("${hour}", String.valueOf(date.getHours()));
 		time = time.replace("${minute}", String.valueOf(date.getMinutes()));
-		return  time;
+		return time;
 	}
 
 	private void showAccessRequest(final Account account) {
@@ -107,24 +108,22 @@ public class NoticeActivity extends BaseActivity {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								FriendRequestReplyForm form = new FriendRequestReplyForm();
-								form.setAccountId(dataSource
-										.getAccountId());
-								form.setToken(dataSource
-										.getToken());
+								form.setAccountId(dataSource.getAccountId());
+								form.setToken(dataSource.getToken());
 								form.setFriendId(account.getAccountId());
-								form.setReply(FriendRequestReplyForm.REPLY_ACCEPT);
+								form
+										.setReply(FriendRequestReplyForm.REPLY_ACCEPT);
 								doAccessRequest(form);
 							}
 						}).setNegativeButton(getString(R.string.btn_reject),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								FriendRequestReplyForm form = new FriendRequestReplyForm();
-								form.setAccountId(dataSource
-										.getAccountId());
-								form.setToken(dataSource
-										.getToken());
+								form.setAccountId(dataSource.getAccountId());
+								form.setToken(dataSource.getToken());
 								form.setFriendId(account.getAccountId());
-								form.setReply(FriendRequestReplyForm.REPLY_REJECT);
+								form
+										.setReply(FriendRequestReplyForm.REPLY_REJECT);
 								doAccessRequest(form);
 							}
 						}).show();
@@ -136,14 +135,14 @@ public class NoticeActivity extends BaseActivity {
 			protected void onAcceptSuccess() {
 				// TODO:
 			};
-			
+
 			@Override
-			protected void onRejectSuccess(){
+			protected void onRejectSuccess() {
 				// TODO:
 			};
-			
+
 			@Override
-		    protected void onFailed(){
+			protected void onFailed() {
 				// TODO:
 			};
 		}.call();
