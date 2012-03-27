@@ -45,4 +45,8 @@ public class ResultCode extends OmediaConst {
         public static final int REJECT_SUCCESS = FriendRequestReplyForm.REPLY_REJECT;
         public static final int FAILED = 4;
     }
+    
+    public static class ShowFriendCcnFile extends ResultCode {
+        public static final int NOT_YOUR_FRIEND = 4;
+    }
 }

@@ -24,6 +24,7 @@ public class UrlConst {
     public static final String SocialGraphUrl = BaseUrl+"socialGraph.do";
     public static final String GetConfigUrl = BaseUrl+"getConfig.do";
     public static final String ShowCcnFilesUrl = BaseUrl+"showCcnFiles.do";
+    public static final String ShowFriendCcnFilesUrl = BaseUrl+"showFriendCcnFiles.do";
     public static final String ccnPutFileUrl = BaseUrl+"ccnPutFile.do";
     public static final String settingsUrl = BaseUrl+"setting.do";
     public static final String ccnDeleteFileUrl = BaseUrl+"deleteCcnFile.do";
