@@ -130,6 +130,8 @@ public class LandingActivity extends BaseActivity {
         MemDataSource.clearData();
         dataSource.saveAccountId(accountId);
         dataSource.saveToken(token);
+        //reset versions
+        dataSource.resetVersions();
         // 从服务端更新账户信息
         GetAccountForm form = new GetAccountForm(accountId, token);
         new GetAccountAPI(form, username, this) {

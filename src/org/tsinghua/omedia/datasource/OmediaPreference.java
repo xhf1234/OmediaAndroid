@@ -25,7 +25,8 @@ public class OmediaPreference {
     private static OmediaPreference me;
     
     //singleton
-    private OmediaPreference(){}
+    private OmediaPreference(){
+    }
     
     static OmediaPreference getInstance() {
         if(me != null) return me;
@@ -35,6 +36,14 @@ public class OmediaPreference {
             }
         }
         return me;
+    }
+    
+    public void resetVersions() {
+        preference().edit().remove(genKey(KEY_FRIENDS_REQUEST_VERSION)).commit();
+        preference().edit().remove(genKey(KEY_FRIENDS_VERSION)).commit();
+        preference().edit().remove(genKey(KEY_ACCOUNT_VERSION)).commit();
+        preference().edit().remove(genKey(KEY_CONFIG_VERSION)).commit();
+        preference().edit().remove(genKey(KEY_CCN_FILE_VERSION)).commit();
     }
     
     public String getUsername() {
@@ -66,7 +75,7 @@ public class OmediaPreference {
     }
     
     public void setFriendRequestVersion(long version) {
-        preference().edit().putLong(genKey(KEY_FRIENDS_REQUEST_VERSION), version);
+        preference().edit().putLong(genKey(KEY_FRIENDS_REQUEST_VERSION), version).commit();
     }
     
     public long getFriendsVersion() {
@@ -74,7 +83,7 @@ public class OmediaPreference {
     }
     
     public void setFriendsVersion(long version) {
-        preference().edit().putLong(genKey(KEY_FRIENDS_VERSION), version);
+        preference().edit().putLong(genKey(KEY_FRIENDS_VERSION), version).commit();
     }
     
     public long getAccountVersion() {
@@ -82,7 +91,7 @@ public class OmediaPreference {
     }
     
     public void setAccountVersion(long version) {
-        preference().edit().putLong(genKey(KEY_ACCOUNT_VERSION), version);
+        preference().edit().putLong(genKey(KEY_ACCOUNT_VERSION), version).commit();
     }
     
     public long getConfigVersion() {
@@ -90,7 +99,7 @@ public class OmediaPreference {
     }
     
     public void setConfigVersion(long version) {
-        preference().edit().putLong(genKey(KEY_CONFIG_VERSION), version);
+        preference().edit().putLong(genKey(KEY_CONFIG_VERSION), version).commit();
     }
     
     public long getCcnFileVersion() {
@@ -98,7 +107,7 @@ public class OmediaPreference {
     }
     
     public void setCcnFileVersion(long version) {
-        preference().edit().putLong(genKey(KEY_CCN_FILE_VERSION), version);
+        preference().edit().putLong(genKey(KEY_CCN_FILE_VERSION), version).commit();
     }
     
     private String genKey(String key) {

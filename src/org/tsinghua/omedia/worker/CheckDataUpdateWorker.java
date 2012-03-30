@@ -18,6 +18,7 @@ import org.tsinghua.omedia.serverAPI.GetFriendRequestAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendsAPI;
 import org.tsinghua.omedia.serverAPI.ShowCcnFilesAPI;
 import org.tsinghua.omedia.serverAPI.ShowFriendCcnFilesAPI;
+import org.tsinghua.omedia.tool.Logger;
 
 /**
  * 调用服务端接口获得各种数据的版本号如accountVersion, friendsVersion
@@ -27,6 +28,7 @@ import org.tsinghua.omedia.serverAPI.ShowFriendCcnFilesAPI;
  *
  */
 public class CheckDataUpdateWorker extends LoopWorker {
+    private static final Logger logger = Logger.getLogger(CheckDataUpdateWorker.class);
     
     public CheckDataUpdateWorker() {
 		super();
@@ -54,32 +56,28 @@ public class CheckDataUpdateWorker extends LoopWorker {
         form.setCcnFileVersion(ccnFileVersion);
         form.setConfigVersion(configVersion);
         new CheckDataVersionAPI(form, omediaConsole) {
-            
+
             @Override
-            protected void onSuccess(long accountVersion, long friendRequestVersion,
-                    long friendsVersion, long configVersion, long ccnFileVersion) {
-                long oldAccountVersion = dataSource.getAccountVersion();
-                long oldFriendRequestVersion = dataSource.getFriendRequestVersion();
-                long oldFriendsVersion = dataSource.getFriendsVersion();
-                long oldConfigVersion = dataSource.getConfigVersion();
-                long oldCcnFileVersion = dataSource.getCcnFileVersion();
-                //若客户端版本号与服务端版本号不同， 更新数据
-                if(oldAccountVersion != accountVersion) {
+            protected void onSuccess(int accountFlag, int friendRequestFlag,
+                    int friendsFlag, int configFlag, int ccnFileFlag) {
+                //若flag==1， 需要更新数据
+                if(accountFlag==1) {
                     updateAccount();
                 }
-                if(oldFriendRequestVersion != friendRequestVersion) {
+                if(friendRequestFlag == 1) {
                     updateFriendRequest();
                 }
-                if(oldFriendsVersion != friendsVersion) {
+                if(friendsFlag == 1) {
                     updateFriends();
                 }
-                if(oldConfigVersion != configVersion) {
+                if(configFlag == 1) {
                     updateConfig();
                 }
-                if(oldCcnFileVersion != ccnFileVersion) {
+                if(ccnFileFlag == 1) {
                     updateCcnFiles();
                 }
             }
+            
         }.call();
     }
     
@@ -127,6 +125,7 @@ public class CheckDataUpdateWorker extends LoopWorker {
             protected void onSuccess(Account[] friends, long version) {
                 dataSource.saveFriends(friends);
                 dataSource.setFriendsVersion(version);
+                updateCcnFiles();
             }
         }.call();
     }

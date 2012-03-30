@@ -201,4 +201,8 @@ public class DataSource {
     public void setFriendCcnFiles(long friendId, CcnFile[] ccnFiles) {
         getMemDataSource().updateFriendCcnFile(friendId, ccnFiles);
     }
+    
+    public void resetVersions() {
+        getPreference().resetVersions();
+    }
 }
