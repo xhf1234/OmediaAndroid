@@ -1,5 +1,10 @@
 package org.tsinghua.omedia.datasource;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.data.CcnFile;
 import org.tsinghua.omedia.data.Config;
@@ -23,6 +28,7 @@ public class MemDataSource {
     private Account[] friends = EmptyInstance.EMPTY_FRIENDS;
     private Config config;
     private CcnFile[] ccnFiles = EmptyInstance.EMPTY_CCN_FILES;
+    private FriendCcnFileStore friendCcnFile = new FriendCcnFileStore();
     
     private static MemDataSource me;
     
@@ -114,4 +120,34 @@ public class MemDataSource {
         this.notifyAll();
     }
     
+    public CcnFile[] getFriendCcnFile(long friendId) {
+        return friendCcnFile.getData(friendId);
+    }
+    
+    public void updateFriendCcnFile(long friendId, CcnFile[] ccnFiles) {
+        friendCcnFile.updateData(friendId, ccnFiles);
+    }
+    
+    private class FriendCcnFileStore {
+        private Map<Long, Set<CcnFile> > datas;
+        
+        public FriendCcnFileStore() {
+            datas = new HashMap<Long, Set<CcnFile> >();
+        }
+        
+        public void updateData(long friendId, CcnFile[] ccnFiles) {
+            Set<CcnFile> set = new HashSet<CcnFile>();
+            for(CcnFile f:ccnFiles) {
+                set.add(f);
+            }
+            datas.put(friendId, set);
+        }
+        
+        public CcnFile[] getData(long friendId) {
+            if(!datas.containsKey(friendId)) {
+                return EmptyInstance.EMPTY_CCN_FILES;
+            }
+            return datas.get(friendId).toArray(new CcnFile[0]);
+        }
+    }
 }

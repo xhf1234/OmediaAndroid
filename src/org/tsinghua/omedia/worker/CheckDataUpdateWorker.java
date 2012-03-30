@@ -10,12 +10,14 @@ import org.tsinghua.omedia.form.GetConfigForm;
 import org.tsinghua.omedia.form.GetFriendRequestForm;
 import org.tsinghua.omedia.form.GetFriendsForm;
 import org.tsinghua.omedia.form.ShowCcnFilesForm;
+import org.tsinghua.omedia.form.ShowFriendCcnFileForm;
 import org.tsinghua.omedia.serverAPI.CheckDataVersionAPI;
 import org.tsinghua.omedia.serverAPI.GetAccountAPI;
 import org.tsinghua.omedia.serverAPI.GetConfigAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendRequestAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendsAPI;
 import org.tsinghua.omedia.serverAPI.ShowCcnFilesAPI;
+import org.tsinghua.omedia.serverAPI.ShowFriendCcnFilesAPI;
 
 /**
  * 调用服务端接口获得各种数据的版本号如accountVersion, friendsVersion
@@ -158,5 +160,23 @@ public class CheckDataUpdateWorker extends LoopWorker {
                 dataSource.setCcnFileVersion(version);
             }
         }.call();
+        for(Account friend : dataSource.getFriends()) {
+            ShowFriendCcnFileForm friendForm = new ShowFriendCcnFileForm();
+            friendForm.setAccountId(accountId);
+            friendForm.setToken(token);
+            friendForm.setFriendId(friend.getAccountId());
+            new ShowFriendCcnFilesAPI(friendForm, omediaConsole) {
+                @Override
+                protected void onSuccess(long version, CcnFile[] ccnFiles) {
+                    dataSource.setCcnFileVersion(version);
+                    dataSource.setFriendCcnFiles(form.getFriendId(), ccnFiles);
+                }
+                
+                @Override
+                protected void onNotYourFriend() {
+                    omediaActivity.showAlertDialog(form.getFriendId()+" is not your friend!");
+                }
+            }.call();
+        }
     }
 }

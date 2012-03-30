@@ -193,4 +193,12 @@ public class DataSource {
     public DataBase getDataBase() {
         return DataBase.getInstance();
     }
+    
+    public CcnFile[] getFriendCcnFiles(long friendId) {
+        return getMemDataSource().getFriendCcnFile(friendId);
+    }
+    
+    public void setFriendCcnFiles(long friendId, CcnFile[] ccnFiles) {
+        getMemDataSource().updateFriendCcnFile(friendId, ccnFiles);
+    }
 }
