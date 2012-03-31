@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.tsinghua.omedia.R;
+import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.event.CcnFilesUpdateEvent;
 import org.tsinghua.omedia.event.Event;
 import org.tsinghua.omedia.form.DeleteCcnFileForm;
@@ -52,7 +53,7 @@ public class CcnActivity extends BaseActivity {
 
     private final int MY_DOC = 1;
 
-    // private final int FRIENDS_DOC = 2;
+    private final int FRIENDS_DOC = 2;
 
     // private final int GROUPS_DOC = 3;
 
@@ -187,7 +188,21 @@ public class CcnActivity extends BaseActivity {
                             FileUtils.getImageIdByType(FileUtils.getMIMEType(fileNames[i])));
                     files.add(fileInfo);
                 }
+            } else if (position == FRIENDS_DOC) {
+                Account[] account = dataSource.getFriends();
+                for (int i = 0; i < account.length; i++) {
+                    int length = dataSource.getFriendCcnFiles(account[i].getAccountId()).length;
+                    String[] fileNames = new String[length];
+                    for (int j = 0; j < length; j++) {
+                        fileNames[j] = dataSource.getFriendCcnFiles(account[i].getAccountId())[j]
+                                .getCcnname();
+                        FileInfoDataSet fileInfo = new FileInfoDataSet(fileNames[j],
+                                FileUtils.getImageIdByType(FileUtils.getMIMEType(fileNames[j])));
+                        files.add(fileInfo);
+                    }
+                }
             }
+
             gridAdapter = new FileInfoAdapter(this, files);
             gridView.setAdapter(gridAdapter);
             initListener();
