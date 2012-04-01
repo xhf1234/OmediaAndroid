@@ -29,13 +29,14 @@ public abstract class CheckDataVersionAPI extends AbstractServerAPI<CheckDataVer
             @Override
             protected void innerRun(ResultType result) {
                 onSuccess(result.accountFlag, result.friendRequestFlag,
-                        result.friendsFlag, result.configFlag, result.ccnFileFlag);
+                        result.friendsFlag, result.configFlag, result.ccnFileFlag
+                        ,result.groupFlag);
             }
         });
     }
     
     protected abstract void onSuccess(int accountFlag, int friendRequestFlag, int friendsFlag
-            , int configFlag, int ccnFileFlag);
+            , int configFlag, int ccnFileFlag, int groupFlag);
 
     public static class ResultType implements Jsonable {
         @JsonInt(name="account")
@@ -48,5 +49,7 @@ public abstract class CheckDataVersionAPI extends AbstractServerAPI<CheckDataVer
         private int configFlag;
         @JsonInt(name="ccnFile")
         private int ccnFileFlag;
+        @JsonInt(name="group")
+        private int groupFlag;
     }
 }

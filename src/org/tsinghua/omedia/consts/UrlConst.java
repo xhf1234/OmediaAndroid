@@ -30,4 +30,6 @@ public class UrlConst {
     public static final String ccnDeleteFileUrl = BaseUrl+"deleteCcnFile.do";
     public static final String friendRequestReplyUrl = BaseUrl+"friendRequestReply.do";
     public static final String deleteFriendUrl = BaseUrl+"deleteFriends.do";
+    public static final String createGroupUrl = BaseUrl+"createGroup.do";
+    public static final String getGroupUrl = BaseUrl+"getGroup.do";
 }

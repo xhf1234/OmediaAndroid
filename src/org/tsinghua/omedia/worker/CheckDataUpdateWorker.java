@@ -4,11 +4,13 @@ import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.data.CcnFile;
 import org.tsinghua.omedia.data.Config;
 import org.tsinghua.omedia.data.FriendRequest;
+import org.tsinghua.omedia.data.Group;
 import org.tsinghua.omedia.form.CheckDataVersionForm;
 import org.tsinghua.omedia.form.GetAccountForm;
 import org.tsinghua.omedia.form.GetConfigForm;
 import org.tsinghua.omedia.form.GetFriendRequestForm;
 import org.tsinghua.omedia.form.GetFriendsForm;
+import org.tsinghua.omedia.form.GetGroupForm;
 import org.tsinghua.omedia.form.ShowCcnFilesForm;
 import org.tsinghua.omedia.form.ShowFriendCcnFileForm;
 import org.tsinghua.omedia.serverAPI.CheckDataVersionAPI;
@@ -16,6 +18,7 @@ import org.tsinghua.omedia.serverAPI.GetAccountAPI;
 import org.tsinghua.omedia.serverAPI.GetConfigAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendRequestAPI;
 import org.tsinghua.omedia.serverAPI.GetFriendsAPI;
+import org.tsinghua.omedia.serverAPI.GetGroupAPI;
 import org.tsinghua.omedia.serverAPI.ShowCcnFilesAPI;
 import org.tsinghua.omedia.serverAPI.ShowFriendCcnFilesAPI;
 import org.tsinghua.omedia.tool.Logger;
@@ -47,6 +50,7 @@ public class CheckDataUpdateWorker extends LoopWorker {
         long friendsVersion = dataSource.getFriendsVersion();
         long configVersion = dataSource.getConfigVersion();
         long ccnFileVersion = dataSource.getCcnFileVersion();
+        long groupVersion = dataSource.getGroupVersion();
         CheckDataVersionForm form = new CheckDataVersionForm();
         form.setAccountId(accountId);
         form.setToken(token);
@@ -55,11 +59,13 @@ public class CheckDataUpdateWorker extends LoopWorker {
         form.setFriendsVersion(friendsVersion);
         form.setCcnFileVersion(ccnFileVersion);
         form.setConfigVersion(configVersion);
+        form.setGroupVersion(groupVersion);
         new CheckDataVersionAPI(form, omediaConsole) {
 
             @Override
             protected void onSuccess(int accountFlag, int friendRequestFlag,
-                    int friendsFlag, int configFlag, int ccnFileFlag) {
+                    int friendsFlag, int configFlag, int ccnFileFlag
+                    ,int groupFlag) {
                 //若flag==1， 需要更新数据
                 if(accountFlag==1) {
                     updateAccount();
@@ -75,6 +81,9 @@ public class CheckDataUpdateWorker extends LoopWorker {
                 }
                 if(ccnFileFlag == 1) {
                     updateCcnFiles();
+                }
+                if(groupFlag == 1) {
+                    updateGroup();
                 }
             }
             
@@ -177,5 +186,18 @@ public class CheckDataUpdateWorker extends LoopWorker {
                 }
             }.call();
         }
+    }
+    
+    private void updateGroup() {
+        GetGroupForm form = new GetGroupForm();
+        form.setAccountId(dataSource.getAccountId());
+        form.setToken(dataSource.getToken());
+        new GetGroupAPI(form, omediaConsole){
+            @Override
+            protected void onSuccess(Group[] groups, long groupVersion) {
+                dataSource.setGroupVersion(groupVersion);
+                dataSource.setGroups(groups);
+            }
+        }.call();
     }
 }

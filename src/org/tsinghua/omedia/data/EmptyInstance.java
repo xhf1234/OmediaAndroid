@@ -19,4 +19,5 @@ public class EmptyInstance {
     
     public static CcnFile[] EMPTY_CCN_FILES = new CcnFile[0];
 
+    public static Group[] EMPTY_GROUPS = new Group[0];
 }

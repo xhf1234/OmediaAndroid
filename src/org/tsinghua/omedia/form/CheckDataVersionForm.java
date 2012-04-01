@@ -18,7 +18,15 @@ public class CheckDataVersionForm extends BaseForm {
     private long ccnFileVersion;
     @HttpParam(name="configVersion")
     private long configVersion;
+    @HttpParam(name="groupVersion")
+    private long groupVersion;
     
+    public long getGroupVersion() {
+        return groupVersion;
+    }
+    public void setGroupVersion(long groupVersion) {
+        this.groupVersion = groupVersion;
+    }
     public long getAccountVersion() {
         return accountVersion;
     }

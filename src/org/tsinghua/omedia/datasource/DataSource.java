@@ -8,6 +8,7 @@ import org.tsinghua.omedia.data.Account;
 import org.tsinghua.omedia.data.CcnFile;
 import org.tsinghua.omedia.data.Config;
 import org.tsinghua.omedia.data.FriendRequest;
+import org.tsinghua.omedia.data.Group;
 import org.tsinghua.omedia.datasource.db.DataBase;
 import org.tsinghua.omedia.datasource.sdcard.CcnFileDatasource;
 import org.tsinghua.omedia.event.CcnFilesUpdateEvent;
@@ -118,12 +119,21 @@ public class DataSource {
     public void setConfigVersion(long version) {
         getPreference().setConfigVersion(version);
     }
+    
     public long getCcnFileVersion() {
         return getPreference().getCcnFileVersion();
     }
     
     public void setCcnFileVersion(long version) {
         getPreference().setCcnFileVersion(version);
+    }
+
+    public long getGroupVersion() {
+        return getPreference().getGroupVersion();
+    }
+    
+    public void setGroupVersion(long version) {
+        getPreference().setGroupVersion(version);
     }
     
     public CcnFile[] getCcnFiles() {
@@ -204,5 +214,13 @@ public class DataSource {
     
     public void resetVersions() {
         getPreference().resetVersions();
+    }
+    
+    public Group[] getGroups() {
+        return getMemDataSource().getGroups();
+    }
+    
+    public void setGroups(Group[] groups) {
+        getMemDataSource().setGroups(groups);
     }
 }

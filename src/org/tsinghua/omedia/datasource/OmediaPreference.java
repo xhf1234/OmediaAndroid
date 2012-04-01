@@ -21,6 +21,7 @@ public class OmediaPreference {
     private static final String KEY_ACCOUNT_VERSION = "omedia_account_version";
     private static final String KEY_CONFIG_VERSION = "omedia_config_version";
     private static final String KEY_CCN_FILE_VERSION = "omedia_ccnFile_version";
+    private static final String KEY_GROUP_VERSION = "omedia_group_version";
 
     private static OmediaPreference me;
     
@@ -44,6 +45,7 @@ public class OmediaPreference {
         preference().edit().remove(genKey(KEY_ACCOUNT_VERSION)).commit();
         preference().edit().remove(genKey(KEY_CONFIG_VERSION)).commit();
         preference().edit().remove(genKey(KEY_CCN_FILE_VERSION)).commit();
+        preference().edit().remove(genKey(KEY_GROUP_VERSION)).commit();
     }
     
     public String getUsername() {
@@ -108,6 +110,14 @@ public class OmediaPreference {
     
     public void setCcnFileVersion(long version) {
         preference().edit().putLong(genKey(KEY_CCN_FILE_VERSION), version).commit();
+    }
+    
+    public long getGroupVersion() {
+        return preference().getLong(genKey(KEY_GROUP_VERSION), -1L);
+    }
+    
+    public void setGroupVersion(long version) {
+        preference().edit().putLong(genKey(KEY_GROUP_VERSION), version).commit();
     }
     
     private String genKey(String key) {

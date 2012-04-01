@@ -10,6 +10,7 @@ import org.tsinghua.omedia.data.CcnFile;
 import org.tsinghua.omedia.data.Config;
 import org.tsinghua.omedia.data.EmptyInstance;
 import org.tsinghua.omedia.data.FriendRequest;
+import org.tsinghua.omedia.data.Group;
 import org.tsinghua.omedia.tool.Logger;
 
 
@@ -29,6 +30,7 @@ public class MemDataSource {
     private Config config;
     private CcnFile[] ccnFiles = EmptyInstance.EMPTY_CCN_FILES;
     private FriendCcnFileStore friendCcnFile = new FriendCcnFileStore();
+    private Group[] groups = EmptyInstance.EMPTY_GROUPS;
     
     private static MemDataSource me;
     
@@ -128,6 +130,16 @@ public class MemDataSource {
         friendCcnFile.updateData(friendId, ccnFiles);
     }
     
+    public Group[] getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Group[] groups) {
+        this.groups = groups;
+    }
+
+
+
     private class FriendCcnFileStore {
         private Map<Long, Set<CcnFile> > datas;
         
@@ -150,4 +162,5 @@ public class MemDataSource {
             return datas.get(friendId).toArray(new CcnFile[0]);
         }
     }
+    
 }
