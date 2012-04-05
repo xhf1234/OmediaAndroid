@@ -75,6 +75,7 @@ public abstract class FormProcessor<F extends AbstractForm> {
                     }
                     //前端验证通过
                     String jsonResult = onProcessForm(form);
+                    logger.info("json String = "+jsonResult);
                     Map<String, Object> values = JsonUtils.read(jsonResult);
                     result = new JsonObject(values);
                     resultCode = result.getInt("result");
