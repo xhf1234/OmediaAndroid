@@ -90,7 +90,7 @@ public class CcnActivity extends BaseActivity {
         if (depth == 0) {
             super.onBackPressed();
         } else {
-            depth = 0;
+            depth--;
             updateUI(currentDir);
         }
     }
@@ -132,7 +132,8 @@ public class CcnActivity extends BaseActivity {
         gridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-                if (depth == 1) {
+                if (((depth == 1) && (currentDir == MY_DOC))
+                        || ((depth == 2) && (currentDir == FRIENDS_DOC))) {
                     String ccnFile = gridAdapter.getFile(position).getFileName();
                     CcnDownloadWorker worker = new CcnDownloadWorker(ccnFile) {
                         @Override
@@ -153,6 +154,9 @@ public class CcnActivity extends BaseActivity {
                     depth = 1;
                     currentDir = position + 1;
                     updateUI(currentDir);
+                } else if ((depth == 1) && (currentDir == FRIENDS_DOC)) {
+                    depth = 2;
+                    updateUI(position+1);
                 }
             }
         });
@@ -173,13 +177,11 @@ public class CcnActivity extends BaseActivity {
     }
 
     private void updateUI(int position) {
-        if (depth == 0) {
+        if (depth == 0) {// TOP My | Friend | Group
             gridAdapter = new FileInfoAdapter(this, rootDirectory);
-            gridView.setAdapter(gridAdapter);
-            initListener();
         } else if (depth == 1) {
-            ArrayList<FileInfoDataSet> files = new ArrayList<FileInfoDataSet>();
-            if (position == MY_DOC) {
+            if (position == MY_DOC) {// My Documents
+                ArrayList<FileInfoDataSet> files = new ArrayList<FileInfoDataSet>();
                 int length = dataSource.getCcnFiles().length;
                 String[] fileNames = new String[length];
                 for (int i = 0; i < length; i++) {
@@ -188,25 +190,35 @@ public class CcnActivity extends BaseActivity {
                             FileUtils.getImageIdByType(FileUtils.getMIMEType(fileNames[i])));
                     files.add(fileInfo);
                 }
-            } else if (position == FRIENDS_DOC) {
+                gridAdapter = new FileInfoAdapter(this, files);
+            } else if (position == FRIENDS_DOC) {// Friends Directory
+                ArrayList<FileInfoDataSet> friendDir = new ArrayList<FileInfoDataSet>();
                 Account[] account = dataSource.getFriends();
+                String[] friendNames = new String[account.length];
                 for (int i = 0; i < account.length; i++) {
-                    int length = dataSource.getFriendCcnFiles(account[i].getAccountId()).length;
-                    String[] fileNames = new String[length];
-                    for (int j = 0; j < length; j++) {
-                        fileNames[j] = dataSource.getFriendCcnFiles(account[i].getAccountId())[j]
-                                .getCcnname();
-                        FileInfoDataSet fileInfo = new FileInfoDataSet(fileNames[j],
-                                FileUtils.getImageIdByType(FileUtils.getMIMEType(fileNames[j])));
-                        files.add(fileInfo);
-                    }
+                    friendNames[i] = account[i].getUsername();
+                    FileInfoDataSet friendInfo = new FileInfoDataSet(friendNames[i],
+                            R.drawable.filebrower_folder, true);
+                    friendDir.add(friendInfo);
                 }
+                gridAdapter = new FileInfoAdapter(this, friendDir);
             }
-
+        } else if (depth == 2) {// Each Friend Documents
+            ArrayList<FileInfoDataSet> files = new ArrayList<FileInfoDataSet>();
+            Account[] account = dataSource.getFriends();
+            int length = dataSource.getFriendCcnFiles(account[position - 1].getAccountId()).length;
+            String[] fileNames = new String[length];
+            for (int j = 0; j < length; j++) {
+                fileNames[j] = dataSource.getFriendCcnFiles(account[position - 1].getAccountId())[j]
+                        .getCcnname();
+                FileInfoDataSet fileInfo = new FileInfoDataSet(fileNames[j],
+                        FileUtils.getImageIdByType(FileUtils.getMIMEType(fileNames[j])));
+                files.add(fileInfo);
+            }
             gridAdapter = new FileInfoAdapter(this, files);
-            gridView.setAdapter(gridAdapter);
-            initListener();
         }
+        gridView.setAdapter(gridAdapter);
+        initListener();
     }
 
     @Override
@@ -216,7 +228,7 @@ public class CcnActivity extends BaseActivity {
             startActivityForResult(intent, REQUEST_SELECT_FILE);
             return true;
         } else if (item.getItemId() == R.id.back_file) {
-            depth = 0;
+            depth--;
             updateUI(currentDir);
             return true;
         } else {
